@@ -1,0 +1,195 @@
+<%- include('../templates/header', {title: "User"}) %>
+
+<body>
+
+    <div class="container">
+        <div class="text-center">
+            <h1>User Page</h1>
+        </div>
+
+        <%- include('../templates/menu') %>
+
+        <pre><%= JSON.stringify(currentUser, null, 4) %></pre>
+
+        <h2>Verify Land</h2>
+        <form id="estate_verify">
+            <input type="text" id="estate_verify_serveyNo" name="estate_verify_serveyNo"
+                placeholder="estate_verify_serveyNo" value="101">
+            <input type="password" name="estate_verify_password" id="estate_verify_password"
+                placeholder="estate_verify_password" value="123456">
+
+            <button id="estate_verify_submit">Submit</button>
+        </form>
+
+        <h2>Change Estate Availability</h2>
+        <form id="estate_avail">
+            <input type="text" id="estate_avail_serveyNo" name="estate_avail_serveyNo"
+                placeholder="estate_avail_serveyNo" value="101">
+
+            <input type="radio" id="estate_avail_choice1" name="estate_avail_choice" value="true" checked="checked">
+            <label for="estate_avail_choice1">Available</label>
+
+            <input type="radio" id="estate_avail_choice2" name="estate_avail_choice" value="false">
+            <label for="estate_avail_choice2">Not Available</label>
+            <br>
+            <button id="estate_avail_submit">Submit</button>
+        </form>
+
+        <h2>Request to Buy Estate</h2>
+        <form id="estate_buy">
+            <input type="text" id="estate_buy_serveyNo" name="estate_buy_serveyNo" placeholder="estate_buy_serveyNo"
+                value="101">
+            <input type="number" id="estate_buy_proposedPrice" name="estate_buy_proposedPrice" placeholder="estate_buy_proposedPrice"
+                value="999">
+
+            <button id="estate_buy_submit">Submit</button>
+        </form>
+
+        <h2>Accept Buyer's Request</h2>
+        <form id="estate_sell">
+            <input type="text" id="estate_sell_serveyNo" name="estate_sell_serveyNo" placeholder="estate_sell_serveyNo"
+                value="101">
+            <input type="text" id="estate_sell_buyer" name="estate_sell_buyer" placeholder="estate_sell_buyer"
+                value="123456789022">
+
+            <br>
+            <label for="estate_sell_reason">Choose a reason for sell:</label>
+            <select name="estate_sell_reason" id="estate_sell_reason">
+                <option value="">--Please choose an option--</option>
+                <option value="sell" selected>Sell</option>
+                <option value="inheritance">Inheritance</option>
+                <option value="gift">Gift</option>
+            </select>
+            <br>
+            <input type="password" name="estate_sell_password" id="estate_sell_password"
+                placeholder="estate_sell_password" value="123456">
+            <br>
+            <button id="estate_sell_submit">Submit</button>
+        </form>
+
+        <h2>Pay Stamp Duty and Registration Charges</h2>
+        <form id="tax_pay">
+            <input type="text" id="tax_pay_serveyNo" placeholder="tax_pay_serveyNo" value="101">
+
+            <button id="tax_pay_submit">Submit</button>
+        </form>
+
+        <hr>
+
+        <h2>Owned</h2>
+        <pre><%= JSON.stringify(owned, null, 4) %></pre>
+
+    </div>
+
+    <%- include('../templates/footer') %>
+
+    <script>
+        'use strict';
+
+        $(document).ready(function () {
+            function submitForm(url, method, data) {
+                return $.ajax({
+                    type: method,
+                    url: url,
+                    contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+                    data: data,
+                    dataType: 'json',
+                })
+            }
+
+
+            $("#estate_avail_submit").click(function (e) {
+                e.preventDefault();
+
+                const data = {
+                    serveyNo: $('#estate_avail_serveyNo').val(),
+                    saleAvailability: $('input[name="estate_avail_choice"]:checked').val()
+                }
+
+                submitForm("/user/estate/availability", "POST", data)
+                    .done(function (res) {
+                        console.log(res);
+                    })
+                    .fail(function (err) {
+                        console.log(err);
+                    });
+            });
+
+
+            $("#estate_buy_submit").click(function (e) {
+                e.preventDefault();
+
+                const data = {
+                    serveyNo: $('#estate_buy_serveyNo').val(),
+                    proposedPrice: $('#estate_buy_proposedPrice').val()
+                }
+
+                submitForm("/user/estate/buy", "POST", data)
+                    .done(function (res) {
+                        console.log(res);
+                    })
+                    .fail(function (err) {
+                        console.log(err);
+                    });
+            });
+
+
+            $("#estate_sell_submit").click(function (e) {
+                e.preventDefault();
+
+                const data = {
+                    serveyNo: $('#estate_sell_serveyNo').val(),
+                    buyer: $('#estate_sell_buyer').val(),
+                    reason: $("#estate_sell_reason").val(),
+                    password: $('#estate_sell_password').val()
+                }
+
+                submitForm("/user/estate/sell", "POST", data)
+                    .done(function (res) {
+                        console.log(res);
+                    })
+                    .fail(function (err) {
+                        console.log(err);
+                    });
+            });
+
+
+            ///////////////////////////////////////////////////
+
+
+            $("#estate_verify_submit").click(function (e) {
+                e.preventDefault();
+
+                const data = {
+                    serveyNo: $('#estate_verify_serveyNo').val(),
+                    password: $('#estate_verify_password').val()
+                }
+
+                submitForm("/user/estate/verify", "POST", data)
+                    .done(function (res) {
+                        console.log(res);
+                    })
+                    .fail(function (err) {
+                        console.log(err);
+                    });
+            });
+
+            $("#tax_pay_submit").click(function (e) {
+                e.preventDefault();
+
+                const data = {
+                    serveyNo: $('#tax_pay_serveyNo').val(),
+                }
+
+                submitForm("/tax", "POST", data)
+                .always(function (res) {
+                        window.location.replace(res.redirectURL);
+                    });
+            });
+
+        });
+    </script>
+
+</body>
+
+</html>

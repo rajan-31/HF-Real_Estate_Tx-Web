@@ -1,0 +1,62 @@
+<%- include('../templates/header', {title: "User"}) %>
+
+<body>
+
+    <div class="container">
+        <div class="text-center">
+            <h1>User Page</h1>
+        </div>
+
+        <%- include('../templates/menu') %>
+
+        <pre><%= JSON.stringify(currentUser, null, 4) %></pre>
+
+        <h2>Verify User</h2>
+        <form id="user_verify">
+            <input type="password" name="user_verify_password" id="user_verify_password"
+                placeholder="user_verify_password" value="123456">
+
+            <button id="user_verify_submit">Submit</button>
+        </form>
+        
+        <a id="logout" href="/logout"></a>
+    <%- include('../templates/footer') %>
+
+    <script>
+        'use strict';
+
+        $(document).ready(function () {
+            function submitForm(url, method, data) {
+                return $.ajax({
+                    type: method,
+                    url: url,
+                    contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+                    data: data,
+                    dataType: 'json',
+                })
+            }
+
+
+            $("#user_verify_submit").click(function (e) {
+                e.preventDefault();
+
+                const data = {
+                    password: $('#user_verify_password').val()
+                }
+
+                submitForm("/user/verify", "POST", data)
+                    .done(function (res) {
+                        console.log(res);
+                        $("#logout")[0].click();
+                    })
+                    .fail(function (err) {
+                        console.log(err);
+                    });
+            });
+
+        });
+    </script>
+
+</body>
+
+</html>

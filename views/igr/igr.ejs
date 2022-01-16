@@ -1,0 +1,71 @@
+<%- include('../templates/header', {title: "Regsitrar"}) %>
+
+<body>
+
+    <div class="container">
+        <div class="text-center">
+            <h1>Registrar Page</h1>
+        </div>
+
+        <%- include('../templates/menu') %>
+
+        <pre><%= JSON.stringify(currentUser, null, 4) %></pre>
+
+        <h2>Create Registrar</h2>
+        <form id="create_registrar">
+            <input type="text" id="create_registrar_officeCode" name="create_registrar_officeCode" placeholder="create_registrar_officeCode" value="THN2">
+            <input type="password" id="create_registrar_registrarPassword" name="create_registrar_registrarPassword" placeholder="create_registrar_registrarPassword" value="123456">
+            <input type="text" id="create_registrar_uid" name="create_registrar_uid" placeholder="create_registrar_uid" value="123456789014">
+            <input type="text" id="create_registrar_name" name="create_registrar_name" placeholder="create_registrar_name" value="Admin2">
+            <br>
+            <input type="password" id="create_registrar_password" name="create_registrar_password" placeholder="create_registrar_password" value="123456">
+            <br>
+            <button id="create_registrar_submit">Submit</button>
+        </form>
+
+        
+
+    </div>
+
+    <%- include('../templates/footer') %>
+
+    <script>
+        'use strict';
+        
+        $(document).ready(function () {
+            function submitForm(url, method, data) {
+                return $.ajax({
+                    type: method,
+                    url: url,
+                    data: data,
+                    dataType: 'json',
+                })
+            }
+
+            /////////////////////////////////
+
+            $("#create_registrar_submit").click(function (e) { 
+                e.preventDefault();
+                
+                const data = {
+                    officeCode : $("#create_registrar_officeCode").val(),
+                    uid : $("#create_registrar_uid").val(),
+                    name : $("#create_registrar_name").val(),
+                    registrarPassword : $("#create_registrar_registrarPassword").val(),
+                    password : $("#create_registrar_password").val()
+                }
+
+                submitForm("/igr/registrar", "POST", data)
+                .always(function(res) {
+                    if(res.status == 200)
+                        console.log(res.responseText);
+                    else
+                        console.log(res);
+                });
+            });
+        });
+    </script>
+
+</body>
+
+</html>

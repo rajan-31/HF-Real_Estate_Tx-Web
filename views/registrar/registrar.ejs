@@ -1,0 +1,233 @@
+<%- include('../templates/header', {title: "Regsitrar"}) %>
+
+<body>
+
+    <div class="container">
+        <div class="text-center">
+            <h1>Registrar Page</h1>
+        </div>
+
+        <%- include('../templates/menu') %>
+
+        <pre><%= JSON.stringify(currentUser, null, 4) %></pre>
+
+        <h2>Create User</h2>
+        <form id="create_user">
+            <input type="text" id="create_user_uid" name="create_user_uid" placeholder="create_user_uid" value="123456789023">
+            <input type="password" id="create_user_password" name="create_user_password" placeholder="create_user_password" value="123456">
+            <input type="text" id="create_user_name" name="create_user_name" placeholder="create_user_name" value="User3">
+
+            <button id="create_user_submit">Submit</button>
+        </form>
+
+        <h2>Modify User</h2>
+        <form id="modify_user">
+            <input type="text" id="modify_user_uid" name="modify_user_uid" placeholder="modify_user_uid" value="123456789023">
+            <input type="text" id="modify_user_name" name="modify_user_name" placeholder="modify_user_name" value="UserX">
+            <br>
+            <label for="modify_user_status">Status:</label>
+            <select name="modify_user_status" id="modify_user_status">
+                <option value="">--Please choose an option--</option>
+                <option value="" selected>No Change</option>
+                <option value="not verified">Not Verified</option>
+                <option value="suspend">Suspend</option>
+            </select>
+            <br>
+            <button id="modify_user_submit">Submit</button>
+        </form>
+
+        <h2>Create Estate</h2>
+        <form id="create_estate">
+            <input type="text" id="create_estate_serveyNo" name="create_estate_serveyNo" placeholder="create_estate_serveyNo" value="101">
+            <input type="text" id="create_estate_owner" name="create_estate_owner" placeholder="create_estate_owner" value="123456789021">
+            <br>
+            <label for="create_estate_location">location</label>
+            <br>
+            <textarea id="create_estate_location" name="create_estate_location" cols="50" rows="2">Village: X, Taluka: Y, District: Z, Pin: 123456</textarea>
+            <br>
+            <input type="number" id="create_estate_area" name="create_estate_area" placeholder="create_estate_area" min="1" step="1" value="201">
+            <input type="datetime-local" id="create_estate_purchasedOn" name="create_estate_purchasedOn" placeholder="create_estate_purchasedOn" value="2022-12-15T13:15">
+            <input type="number" id="create_estate_transactionsCount" name="create_estate_transactionsCount" placeholder="create_estate_transactionsCount" min="0" step="1" value="0">
+            <br>
+
+            <button id="create_estate_submit">Submit</button>
+        </form>
+
+        <h2>Modify Estate</h2>
+        <form id="modify_estate">
+            <input type="text" id="modify_estate_serveyNo" name="modify_estate_serveyNo" placeholder="modify_estate_serveyNo" value="101">
+            <br>
+            <label for="modify_estate_location">location</label>
+            <br>
+            <textarea id="modify_estate_location" name="modify_estate_location" cols="50" rows="2"></textarea>
+            <br>
+            <input type="number" id="modify_estate_area" name="modify_estate_area" placeholder="modify_estate_area" min="1" step="1">
+            <input type="datetime-local" id="modify_estate_purchasedOn" name="modify_estate_purchasedOn" placeholder="modify_estate_purchasedOn">
+            <input type="number" id="modify_estate_transactionsCount" name="modify_estate_transactionsCount" placeholder="modify_estate_transactionsCount" min="0" step="1">
+            <br>
+
+            <button id="modify_estate_submit">Submit</button>
+        </form>
+
+        <hr>
+
+        <h2>Check Stamp Duty and Registration Charges Paid</h4>
+            <form id="check_tax">
+                <input type="text" id="check_tax_transactionId" name="check_tax_transactionId" placeholder="check_tax_transactionId" value="transaction_101_1">
+                
+                <button id="check_tax_submit">Check</button>
+            </form>
+            <p>Result: <span id="check_tax_result"></span></p>
+
+        <h2>Approve Sell of Estate</h2>
+        <form id="approve_sell">
+            <input type="text" id="approve_sell_serveyNo" name="approve_sell_serveyNo" placeholder="approve_sell_serveyNo" value="101">            
+            <input type="password" name="approve_sell_password" id="approve_sell_password" placeholder="approve_sell_password" value="123456">
+            <br>
+
+            <button id="approve_sell_submit">Submit</button>
+        </form>
+
+        <h2>To approve</h2>
+        <pre><%= JSON.stringify(toApprove, null, 4) %></pre>
+
+    </div>
+
+    <%- include('../templates/footer') %>
+
+    <script>
+        'use strict';
+        
+        $(document).ready(function () {
+            function submitForm(url, method, data) {
+                return $.ajax({
+                    type: method,
+                    url: url,
+                    data: data,
+                    dataType: 'json',
+                })
+            }
+
+            /////////////////////////////////
+
+            $("#create_user_submit").click(function (e) { 
+                e.preventDefault();
+                
+                const data = {
+                    uid : $("#create_user_uid").val(),
+                    name : $("#create_user_name").val(),
+                    password : $("#create_user_password").val()
+                }
+
+                submitForm("/registrar/user", "POST", data)
+                .done(function(res) {
+                    console.log(res);
+                })
+                .fail(function(err) {
+                    console.log(err);
+                });
+            });
+            
+            
+            $("#modify_user_submit").click(function (e) { 
+                e.preventDefault();
+                
+                const data = {
+                    uid : $("#modify_user_uid").val(),
+                    name : $("#modify_user_name").val(),
+                    status: $("#modify_user_status").val()
+                }
+
+                submitForm("/registrar/user?_method=PUT", "POST", data)
+                .done(function(res) {
+                    console.log(res);
+                })
+                .fail(function(err) {
+                    console.log(err);
+                });
+            });
+
+            
+            $("#create_estate_submit").click(function (e) { 
+                e.preventDefault();
+                
+                const data = {
+                    serveyNo : $("#create_estate_serveyNo").val(),
+                    owner : $("#create_estate_owner").val(),
+                    location : $("#create_estate_location").val(),
+                    area : $("#create_estate_area").val(),
+                    purchasedOn : $("#create_estate_purchasedOn").val()+":00+05:30",
+                    transactionsCount : $("#create_estate_transactionsCount").val()
+                }
+
+                submitForm("/registrar/estate", "POST", data)
+                .done(function(res) {
+                    console.log(res);
+                })
+                .fail(function(err) {
+                    console.log(err);
+                });
+            });
+
+
+            $("#modify_estate_submit").click(function (e) { 
+                e.preventDefault();
+                
+                const data = {
+                    serveyNo : $("#modify_estate_serveyNo").val(),
+                    location : $("#modify_estate_location").val(),
+                    area : $("#modify_estate_area").val(),
+                    purchasedOn : $("#modify_estate_purchasedOn").val() == '' ? '' : $("#modify_estate_purchasedOn").val()+":00+05:30",
+                    transactionsCount : $("#modify_estate_transactionsCount").val()
+                }
+
+                submitForm("/registrar/estate?_method=PUT", "PUT", data)
+                .done(function(res) {
+                    console.log(res);
+                })
+                .fail(function(err) {
+                    console.log(err);
+                });
+            });
+
+
+            $("#approve_sell_submit").click(function (e) { 
+                e.preventDefault();
+                
+                const data = {
+                    serveyNo : $("#approve_sell_serveyNo").val(),
+                    password : $("#approve_sell_password").val()
+                }
+
+                submitForm("/registrar/sell", "POST", data)
+                .done(function(res) {
+                    console.log(res);
+                })
+                .fail(function(err) {
+                    console.log(err);
+                });
+            });
+
+            $("#check_tax_submit").click(function (e) { 
+                e.preventDefault();
+                
+                const data = {
+                    transactionId : $("#check_tax_transactionId").val()
+                }
+
+                submitForm("/tax/check", "GET", data)
+                .done(function(res) {
+                    console.log(res)
+                    $("#check_tax_result").html(res.isPaid);
+                })
+                .fail(function(err) {
+                    console.log(err);
+                    $("#check_tax_result").html("No record found.");
+                });
+            });
+        });
+    </script>
+
+</body>
+
+</html>

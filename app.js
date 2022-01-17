@@ -5,6 +5,7 @@ const LocalStrategy = require("passport-local");
 const expressSession = require("express-session");
 const mongoose = require("mongoose")
 const connectMongo = require("connect-mongo");
+const flash = require('connect-flash');
 
 const path = require("path")
 const fs = require('fs');
@@ -13,10 +14,11 @@ const app = express();
 
 
 require('dotenv').config();
-app.set("view engine", "ejs");
-app.use(methodOverride("_method"));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+app.set("view engine", "ejs");
+app.use(methodOverride("_method"));
+app.use(flash());
 app.use("/", express.static(path.join(__dirname, "public"), {
     etag: false,
     maxAge: 1000 * 60 * 60   // 1 hr
@@ -175,6 +177,14 @@ passport.serializeUser(function (user, done) {
 
 passport.deserializeUser(function (user, done) {
     if (user != null) done(null, user);
+});
+
+app.use(function(req, res, next){
+    res.locals.loggedInUser = req.user;
+    res.locals.successMessage = req.flash("successMessage");
+    res.locals.errorMessage = req.flash("errorMessage");
+
+    next();
 });
 
 

@@ -22,9 +22,9 @@ router.get('/user', allMiddlewares.isLoggedInUser,  (req, res) => {
             detailed_owned.push(temp);
         }
 
-        res.render("user/user", {currentUser: req.user, owned: detailed_owned});
+        res.render("user/user", {owned: detailed_owned});
     }).catch((err) => {
-        res.render("user/user", {currentUser: req.user, owned: []});
+        res.render("user/user", {owned: []});
     });
 });
 

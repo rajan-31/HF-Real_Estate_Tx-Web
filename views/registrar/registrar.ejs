@@ -1,95 +1,166 @@
 <%- include('../templates/header', {title: "Regsitrar"}) %>
 
 <body>
+    <%- include('../templates/menu', {who: "registrar"}) %>
 
-    <div class="container">
-        <div class="text-center">
-            <h1>Registrar Page</h1>
-        </div>
+    <div class="container mt-3 mb-5">
 
-        <%- include('../templates/menu') %>
+        <h3 class="mt-3">Create User</h3>
+        <form class="row" id="create_user">
 
-        <pre><%= JSON.stringify(currentUser, null, 4) %></pre>
-
-        <h2>Create User</h2>
-        <form id="create_user">
-            <input type="text" id="create_user_uid" name="create_user_uid" placeholder="create_user_uid" value="123456789023">
-            <input type="password" id="create_user_password" name="create_user_password" placeholder="create_user_password" value="123456">
-            <input type="text" id="create_user_name" name="create_user_name" placeholder="create_user_name" value="User3">
-
-            <button id="create_user_submit">Submit</button>
+            <div class="col">
+                <input type="text" class="form-control" id="create_user_uid" name="create_user_uid" placeholder="create_user_uid" value="123456789023">
+            </div>
+            <div class="col">
+                <input type="password" class="form-control" id="create_user_password" name="create_user_password" placeholder="create_user_password" value="123456">
+            </div>
+            <div class="col">
+                <input type="text" class="form-control" id="create_user_name" name="create_user_name" placeholder="create_user_name" value="User3">
+            </div>
+            <div class="col">
+                <button class="btn btn-primary" id="create_user_submit">Submit</button>
+            </div>
         </form>
 
-        <h2>Modify User</h2>
-        <form id="modify_user">
-            <input type="text" id="modify_user_uid" name="modify_user_uid" placeholder="modify_user_uid" value="123456789023">
-            <input type="text" id="modify_user_name" name="modify_user_name" placeholder="modify_user_name" value="UserX">
-            <br>
-            <label for="modify_user_status">Status:</label>
-            <select name="modify_user_status" id="modify_user_status">
-                <option value="">--Please choose an option--</option>
-                <option value="" selected>No Change</option>
-                <option value="not verified">Not Verified</option>
-                <option value="suspend">Suspend</option>
-            </select>
-            <br>
-            <button id="modify_user_submit">Submit</button>
+        <h3 class="mt-3">Modify User</h3>
+        <form class="row" id="modify_user">
+            <div class="col">
+                <input type="text" class="form-control" id="modify_user_uid" name="modify_user_uid" placeholder="modify_user_uid" value="123456789023">
+            </div>
+            <div class="col">
+                <input type="text" class="form-control" id="modify_user_name" name="modify_user_name" placeholder="modify_user_name" value="UserX">
+            </div>
+            <div class="col">
+                <select class="form-select" name="modify_user_status" id="modify_user_status">
+                    <option value="">--Please choose a Status--</option>
+                    <option value="" selected>No Change</option>
+                    <option value="not verified">Not Verified</option>
+                    <option value="suspend">Suspend</option>
+                </select>
+            </div>
+
+            <div class="col">
+                <button class="btn btn-primary" id="modify_user_submit">Submit</button>
+            </div>
         </form>
 
-        <h2>Create Estate</h2>
-        <form id="create_estate">
-            <input type="text" id="create_estate_serveyNo" name="create_estate_serveyNo" placeholder="create_estate_serveyNo" value="101">
-            <input type="text" id="create_estate_owner" name="create_estate_owner" placeholder="create_estate_owner" value="123456789021">
-            <br>
-            <label for="create_estate_location">location</label>
-            <br>
-            <textarea id="create_estate_location" name="create_estate_location" cols="50" rows="2">Village: X, Taluka: Y, District: Z, Pin: 123456</textarea>
-            <br>
-            <input type="number" id="create_estate_area" name="create_estate_area" placeholder="create_estate_area" min="1" step="1" value="201">
-            <input type="datetime-local" id="create_estate_purchasedOn" name="create_estate_purchasedOn" placeholder="create_estate_purchasedOn" value="2022-12-15T13:15">
-            <input type="number" id="create_estate_transactionsCount" name="create_estate_transactionsCount" placeholder="create_estate_transactionsCount" min="0" step="1" value="0">
-            <br>
+        <h3 class="mt-3">Create Estate</h3>
+        <form class="row" id="create_estate">
+            <div class="mb-2 col-md-6">
+                <input type="text" class="form-control" id="create_estate_serveyNo" name="create_estate_serveyNo" placeholder="create_estate_serveyNo" value="101">
+            </div>
+            <div class="mb-2 col-md-6">
+                <input type="text" class="form-control" id="create_estate_owner" name="create_estate_owner" placeholder="create_estate_owner" value="123456789021">
+            </div>
 
-            <button id="create_estate_submit">Submit</button>
+            <div class="mb-2 col-12">
+                <label class="form-label" for="create_estate_location">Location</label>
+                <textarea class="form-control" id="create_estate_location" name="create_estate_location" cols="50" rows="2">Village: X, Taluka: Y, District: Z, Pin: 123456</textarea>
+            </div>
+
+            <div class="input-group mb-2 col">
+                <input class="form-control" type="number" id="create_estate_area" name="create_estate_area" placeholder="create_estate_area" min="1" step="1" value="201">                
+                <span class="input-group-text">m<sup>2</sup></span>
+            </div>
+
+            <div class="mb-2 col">
+                <input class="form-control" type="datetime-local" id="create_estate_purchasedOn" name="create_estate_purchasedOn" placeholder="create_estate_purchasedOn" value="2022-12-15T13:15">
+            </div>
+            <div class="mb-2 col">
+                <input class="form-control" type="number" id="create_estate_transactionsCount" name="create_estate_transactionsCount" placeholder="create_estate_transactionsCount" min="0" step="1" value="0">
+            </div>
+
+            <div class="col-12">
+                <button class="btn btn-primary" id="create_estate_submit">Submit</button>
+            </div>
         </form>
 
-        <h2>Modify Estate</h2>
-        <form id="modify_estate">
-            <input type="text" id="modify_estate_serveyNo" name="modify_estate_serveyNo" placeholder="modify_estate_serveyNo" value="101">
-            <br>
-            <label for="modify_estate_location">location</label>
-            <br>
-            <textarea id="modify_estate_location" name="modify_estate_location" cols="50" rows="2"></textarea>
-            <br>
-            <input type="number" id="modify_estate_area" name="modify_estate_area" placeholder="modify_estate_area" min="1" step="1">
-            <input type="datetime-local" id="modify_estate_purchasedOn" name="modify_estate_purchasedOn" placeholder="modify_estate_purchasedOn">
-            <input type="number" id="modify_estate_transactionsCount" name="modify_estate_transactionsCount" placeholder="modify_estate_transactionsCount" min="0" step="1">
-            <br>
+        <h3 class="mt-3">Modify Estate</h3>
+        <form class="row" id="modify_estate">
+            <div class="mb-2 col-md-6">
+                <input type="text" class="form-control" id="modify_estate_serveyNo" name="modify_estate_serveyNo" placeholder="modify_estate_serveyNo" value="101">
+            </div>
 
-            <button id="modify_estate_submit">Submit</button>
+            <div class="mb-2 col-12">
+                <label class="form-label" for="modify_estate_location">Location</label>
+                <textarea class="form-control" id="modify_estate_location" name="modify_estate_location" cols="50" rows="2"></textarea>
+            </div>
+
+            <div class="input-group mb-2 col">
+                <input class="form-control" type="number" id="modify_estate_area" name="modify_estate_area" placeholder="modify_estate_area" min="1" step="1">                
+                <span class="input-group-text">m<sup>2</sup></span>
+            </div>
+
+            <div class="mb-2 col">
+                <input class="form-control" type="datetime-local" id="modify_estate_purchasedOn" name="modify_estate_purchasedOn" placeholder="modify_estate_purchasedOn">
+            </div>
+            <div class="mb-2 col">
+                <input class="form-control" type="number" id="modify_estate_transactionsCount" name="modify_estate_transactionsCount" placeholder="modify_estate_transactionsCount" min="0" step="1">
+            </div>
+
+            <div class="col-12">
+                <button class="btn btn-primary" id="modify_estate_submit">Submit</button>
+            </div>
         </form>
 
         <hr>
 
-        <h2>Check Stamp Duty and Registration Charges Paid</h4>
-            <form id="check_tax">
-                <input type="text" id="check_tax_transactionId" name="check_tax_transactionId" placeholder="check_tax_transactionId" value="transaction_101_1">
-                
-                <button id="check_tax_submit">Check</button>
+        <!-- <h3 class="mt-3">Check Stamp Duty and Registration Charges Paid</h4>
+            <form class="row" id="check_tax">
+                <div class="col-4 mb-2">
+                    <input class="form-control" type="text" id="check_tax_serveyNo" name="check_tax_serveyNo" placeholder="check_tax_serveyNo" value="101">
+                </div>
+                <div class="col-4 mb-2">
+                    <input class="form-control" type="number" id="check_tax_transactionCount" name="check_tax_transactionCount" placeholder="check_tax_transactionCount" value="1">
+                </div>
+
+                <div class="col-4">
+                    <button class="btn btn-primary" id="check_tax_submit">Check</button>
+                </div>
             </form>
-            <p>Result: <span id="check_tax_result"></span></p>
 
-        <h2>Approve Sell of Estate</h2>
-        <form id="approve_sell">
-            <input type="text" id="approve_sell_serveyNo" name="approve_sell_serveyNo" placeholder="approve_sell_serveyNo" value="101">            
-            <input type="password" name="approve_sell_password" id="approve_sell_password" placeholder="approve_sell_password" value="123456">
-            <br>
+            <div class="row">
+                <div class="col-8">
+                    <div class="input-group">
+                        <span class="input-group-text">Result</span>
+                        <input class="form-control" type="text" id="check_tax_result" value="" disabled="disabled">
+                    </div>
+                </div>
+            </div> -->
 
-            <button id="approve_sell_submit">Submit</button>
+        <h3 class="mt-3">Approve Sell of Estate</h3>
+        <form class="row" id="approve_sell">
+
+            <div class="mb-2 col-md-6">
+                <select class="form-select" name="approve_sell_serveyNo" id="approve_sell_serveyNo">
+                    <option value="">--Please choose a Servey No.--</option>
+                </select>
+            </div>
+            <div class="mb-2 col-md-6">
+                <input class="form-control" type="password" name="approve_sell_password" id="approve_sell_password" placeholder="approve_sell_password" value="123456">
+            </div>
+            
+
+            <div class="col-12">
+                <button class="btn btn-primary" id="approve_sell_submit">Submit</button>
+            </div>
         </form>
 
-        <h2>To approve</h2>
-        <pre><%= JSON.stringify(toApprove, null, 4) %></pre>
+        <h3 class="mt-3">To approve</h3>
+        <pre id="toApprove_data" hidden="hidden"><%= JSON.stringify(toApprove, null, 4) %></pre>
+
+        <!-- <table id="table_owned" class="table table-dark table-bordered table-hover"> -->
+        <table id="table_toApprove" class="table table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Servey No.</th>
+                    <th scope="col">Transaction Count</th>
+                    <th scope="col">Taxes Paid</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
 
     </div>
 
@@ -210,21 +281,55 @@
 
             $("#check_tax_submit").click(function (e) { 
                 e.preventDefault();
+
+                const _transactionId = "transaction" + '_' + $("#check_tax_serveyNo").val() + '_' + $("#check_tax_transactionCount").val();
                 
                 const data = {
-                    transactionId : $("#check_tax_transactionId").val()
+                    transactionId : _transactionId
                 }
 
                 submitForm("/tax/check", "GET", data)
                 .done(function(res) {
                     console.log(res)
-                    $("#check_tax_result").html(res.isPaid);
+                    $("#check_tax_result").val(res.isPaid ? "Paid" : "Not Paid");
                 })
                 .fail(function(err) {
                     console.log(err);
-                    $("#check_tax_result").html("No record found.");
+                    $("#check_tax_result").val("No record found.");
                 });
             });
+
+
+            //////////////////////
+            const list_toApprove = JSON.parse($("#toApprove_data").html());
+
+            const tb = $("#table_toApprove tbody");
+            const appr = $("#approve_sell_serveyNo");
+
+            list_toApprove.forEach(element => {
+                const temp = element.split("_");
+                const temp_serveyNo = temp[1];
+                const temp_transactionCount = temp[2];
+
+                submitForm("/tax/check", "GET", {transactionId : element})
+                .done(function(res) {
+                    tb.append(`<tr>
+                        <td>${temp_serveyNo}</td>
+                        <td>${temp_transactionCount}</td>
+                        <td>${res.isPaid ? "Paid" : "Not Paid"}</td>
+                    </tr>`)
+                })
+                .fail(function(err) {
+                    tb.append(`<tr>
+                        <td>${temp_serveyNo}</td>
+                        <td>${temp_transactionCount}</td>
+                        <td>No record found</td>
+                    </tr>`)
+                });
+
+                appr.append(`<option value="${temp_serveyNo}">${temp_serveyNo}</option>`)
+            });
+            //////////////////////
         });
     </script>
 

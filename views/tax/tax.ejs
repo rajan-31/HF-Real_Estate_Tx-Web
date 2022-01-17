@@ -1,25 +1,27 @@
 <%- include('../templates/header', {title: "User"}) %>
 
 <body>
+    <%- include('../templates/menu', {who: loggedInUser ? loggedInUser.type : ""}) %>
 
-    <div class="container">
-        <div class="text-center">
-            <h1>User Page</h1>
-        </div>
+    <div class="container mt-3">
+        <h3>Pay Stamp Duty and Registration Charges</h2>
 
-        <%- include('../templates/menu') %>
+        <table class="table table-bordered border-dark">
+            <tr>
+                <td class="table-active">Servey No.</td>
+                <td><span id="data_serveyNo"><%= serveyNo %></span></td>
+            </tr>
+            <tr>
+                <td class="table-active">Transaction Id</td>
+                <td><span id="data_transactionId"><%= transactionId %></span></td>
+            </tr>
+        </table>
 
-        <pre><%= JSON.stringify(currentUser, null, 4) %></pre>
-
-        <h2>Pay Stamp Duty and Registration Charges</h2>
-
-        <p>ServeyNo: <span id="data_serveyNo"><%= serveyNo %></span></p>
-        <p>TransactionId: <span id="data_transactionId"><%= transactionId %></span></p>
         <% if (isPaid == 1) { %>
             <p><strong>PAID</strong></p>
         <% } else { %>
             <form id="tax_pay">
-                <button id="tax_pay_submit">Pay</button>
+                <button class="btn btn-success" id="tax_pay_submit">Pay</button>
             </form>
         <% } %>
             

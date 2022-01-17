@@ -1,26 +1,32 @@
 <%- include('../templates/header', {title: "Regsitrar"}) %>
 
 <body>
+    <%- include('../templates/menu', {who: "igr"}) %>
 
-    <div class="container">
-        <div class="text-center">
-            <h1>Registrar Page</h1>
-        </div>
+    <div class="container mt-3">
 
-        <%- include('../templates/menu') %>
+        <h3>Create New Registrar</h3>
+        <form id="create_registrar" class="row">
+            <div class="mb-2 col-md-6">
+                <input type="text" class="form-control" id="create_registrar_officeCode" name="create_registrar_officeCode" placeholder="create_registrar_officeCode" value="THN2">
+            </div>
+            <div class="mb-2 col-md-6">
+                <input type="password" class="form-control" id="create_registrar_registrarPassword" name="create_registrar_registrarPassword" placeholder="create_registrar_registrarPassword" value="123456">
+            </div>
+            <div class="mb-2 col-md-6">
+                <input type="text" class="form-control" id="create_registrar_uid" name="create_registrar_uid" placeholder="create_registrar_uid" value="123456789014">
+            </div>
+            <div class="mb-2 col-md-6">
+                <input type="text" class="form-control" id="create_registrar_name" name="create_registrar_name" placeholder="create_registrar_name" value="Admin2">
+            </div>
 
-        <pre><%= JSON.stringify(currentUser, null, 4) %></pre>
+            <div class="mb-2 col-12">
+                <input type="password" class="form-control" id="create_registrar_password" name="create_registrar_password" placeholder="create_registrar_password" value="123456">
+            </div>
 
-        <h2>Create Registrar</h2>
-        <form id="create_registrar">
-            <input type="text" id="create_registrar_officeCode" name="create_registrar_officeCode" placeholder="create_registrar_officeCode" value="THN2">
-            <input type="password" id="create_registrar_registrarPassword" name="create_registrar_registrarPassword" placeholder="create_registrar_registrarPassword" value="123456">
-            <input type="text" id="create_registrar_uid" name="create_registrar_uid" placeholder="create_registrar_uid" value="123456789014">
-            <input type="text" id="create_registrar_name" name="create_registrar_name" placeholder="create_registrar_name" value="Admin2">
-            <br>
-            <input type="password" id="create_registrar_password" name="create_registrar_password" placeholder="create_registrar_password" value="123456">
-            <br>
-            <button id="create_registrar_submit">Submit</button>
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary" id="create_registrar_submit">Submit</button>
+            </div>
         </form>
 
         

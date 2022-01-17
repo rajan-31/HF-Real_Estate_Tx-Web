@@ -1,0 +1,117 @@
+<%- include('templates/header', {title: "Test"}) %>
+
+<body>
+    <%- include('templates/menu', {who: loggedInUser ? loggedInUser.type : ""}) %>
+
+    <div class="container mt-3">
+        <div class="text-center">
+            <h1>Testing Page</h1>
+        </div>
+
+        <h3>Delete Using Key</h2>
+        <form id="delete_value">
+            <input type="text" id="delete_value_key" name="delete_value_key" value="user_123456789023">
+
+            <button id="delete_value_submit">Delete</button>
+        </form>
+
+        <h3>Execute any</h3>
+        <form id="execute_any">
+            <input type="text" id="execute_any_func" name="execute_any_func" placeholder="func">
+            <input type="text" id="execute_any_args" name="execute_any_args" placeholder="execute_any_args" value="[]">
+
+            <button id="execute_any_submit">Execute</button>
+        </form>
+
+        <h2>Ledger Data</h2>
+        <div id="show_data" class="row border"></div>
+
+    </div>
+
+    <%- include('templates/footer') %>
+
+    <script>
+        'use strict';
+
+        $(document).ready(function () {
+            function submitForm(url, method, data) {
+                return $.ajax({
+                    type: method,
+                    url: url,
+                    data: data,
+                    dataType: 'json',
+                })
+            }
+
+            /////////////////////////////////
+
+            function load_all_data() {
+                $('#show_data').html('');
+
+                submitForm("/all-data", 'GET', {})
+                    .done(function (res) {
+                        let agg = [];
+                        res.forEach(element => {
+                            let splitt = element.split(', Value: ');
+                            let temp_key = splitt[0];
+
+                            let val = splitt[1];
+                            val = JSON.parse(val);
+                            let key = temp_key.substring(5);
+
+                            let json = {Key: key, Value: val};
+                            let jsonStr = JSON.stringify(json, null, 4);
+                            
+                            agg.push(json);
+                            $('#show_data').append(`<div class="col-4 border p-3"><pre>${jsonStr}</pre></div>`)
+                        });
+                        console.log(agg);
+                    })
+                    .fail(function (err) {
+                        $('#show_data').text(err);
+                    })
+            }
+
+            load_all_data();
+
+            $("#delete_value_submit").click(function (e) {
+                e.preventDefault();
+
+                const data = {
+                    key: $("#delete_value_key").val(),
+                }
+
+                submitForm("/delete-value", "POST", data)
+                    .done(function (res) {
+                        console.log(res.response);
+                    })
+                    .fail(function (err) {
+                        console.log(err);
+                    })
+                    .always(function () {
+                        load_all_data();
+                    });
+            });
+
+            $("#execute_any_submit").click(function (e) {
+                e.preventDefault();
+
+                const data = {
+                    func: $("#execute_any_func").val(),
+                    args: $("#execute_any_args").val()
+                }
+
+                submitForm("/execute-any", "POST", data)
+                    .done(function (res) {
+                        console.log(res);
+                    })
+                    .fail(function (err) {
+                        console.log(err);
+                    });
+            });
+        });
+    </script>
+
+</body>
+
+</html>

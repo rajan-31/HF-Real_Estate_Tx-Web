@@ -1,41 +1,66 @@
 <%- include('templates/header', {title: "Login"}) %>
+
 <body>
+    <%- include('templates/menu', {who: ""}) %>
 
-    <div class="container">
-        <div class="text-center">
-            <h1>Login</h1>
-        </div>
+    <div class="container mt-3">
 
-        <%- include('templates/menu') %>
-        
-        <h2>User Login</h2>
+        <h3 class="text-center mt-5">User Login</h3>
 
         <form action="/user/login" method="post">
-            <input type="text" name="username" id="username1" placeholder="uid" value="123456789021">
-            <input type="password" name="password" id="password1" placeholder="password" value="123456">
-
-            <button type="submit">Login</button>
+            <div class="row mb-3">
+                <div class="col-md-5 col-sm-4">
+                    <input type="text" class="form-control" name="username" id="username1" placeholder="uid"
+                        value="123456789021">
+                </div>
+                <div class="col-md-5 col-sm-4">
+                    <input type="password" class="form-control" name="password" id="password1" placeholder="password"
+                        value="123456">
+                </div>
+                <div class="col-md-2 col-sm-4 d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">Sign in</button>
+                </div>
+            </div>
         </form>
 
-        <h2>Registrar Login</h2>
+        <h3 class="text-center mt-5">Registrar Login</h3>
 
         <form action="/registrar/login" method="post">
-            <input type="text" name="username" id="username2" placeholder="officeCode" value="THN1">
-            <input type="password" name="password" id="password2" placeholder="password" value="123456">
-
-            <button type="submit">Login</button>
+            <div class="row mb-3">
+                <div class="col-md-5 col-sm-4">
+                    <input type="text" class="form-control" name="username" id="username2" placeholder="officeCode"
+                        value="THN1">
+                </div>
+                <div class="col-md-5 col-sm-4">
+                    <input type="password" class="form-control" name="password" id="password2" placeholder="password"
+                        value="123456">
+                </div>
+                <div class="col-md-2 col-sm-4 d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">Sign in</button>
+                </div>
+            </div>
         </form>
 
-        <h2>IGR Login</h2>
+        <h3 class="text-center mt-5">IGR Login</h3>
         <form action="/igr/login" method="post">
-            <input type="text" name="username" id="username3" placeholder="username" value="super">
-            <input type="password" name="password" id="password3" placeholder="password" value="123456">
-
-            <button type="submit">Login</button>
+            <div class="row mb-3">
+                <div class="col-md-5 col-sm-4">
+                    <input type="text" class="form-control" name="username" id="username3" placeholder="username"
+                        value="super">
+                </div>
+                <div class="col-md-5 col-sm-4">
+                    <input type="password" class="form-control" name="password" id="password3" placeholder="password"
+                        value="123456">
+                </div>
+                <div class="col-md-2 col-sm-4 d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">Sign in</button>
+                </div>
+            </div>
         </form>
     </div>
 
     <%- include('templates/footer') %>
 
 </body>
+
 </html>

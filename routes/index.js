@@ -6,6 +6,10 @@ router.get('/', (req, res) => {
     res.render("home");
 });
 
+router.get('/test', (req, res) => {
+    res.render("test");
+});
+
 
 router.get('/all-data', (req, res)=>{
     contract.evaluateTransaction('GetAll', '', '').then((payload) => {

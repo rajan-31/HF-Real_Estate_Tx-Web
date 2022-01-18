@@ -43,5 +43,51 @@ router.post('/execute-any', (req, res) => {
     });
 });
 
+router.get('/details/estate', (req, res) => {
+    const queryData = req.query;
+    const serveyNo = queryData.serveyNo;
+
+    const key = "estate" + '_' + serveyNo;
+
+    contract.evaluateTransaction('GetValue', key).then(async (payload) => {
+        const estate = JSON.parse( payload.toString() );
+        res.status(200).json(estate);
+    }).catch((err) => {
+        res.status(501).send(err);
+    });
+});
+
+router.get('/details/transaction', (req, res) => {
+    const queryData = req.query;
+
+    const serveyNo = queryData.serveyNo;
+    const transactionNum = queryData.transactionNum;
+
+    const key = "transaction" + '_' + serveyNo + '_' + transactionNum;
+
+    console.log(key)
+
+    contract.evaluateTransaction('GetValue', key).then(async (payload) => {
+        const transaction = JSON.parse( payload.toString() );
+        res.status(200).json(transaction);
+    }).catch((err) => {
+        res.status(501).send(err);
+    });
+});
+
+router.get('/details/user', (req, res) => {
+    const queryData = req.query;
+
+    const uid = queryData.uid;
+    
+    const key = "user" + '_' + uid;
+    contract.evaluateTransaction('GetValue', key).then(async (payload) => {
+        const _user = JSON.parse( payload.toString() );
+        res.status(200).json(_user);
+    }).catch((err) => {
+        res.status(501).send(err);
+    });
+});
+
 
 module.exports = router;

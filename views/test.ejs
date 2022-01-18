@@ -1,7 +1,47 @@
 <%- include('templates/header', {title: "Test"}) %>
 
 <body>
-    <%- include('templates/menu', {who: loggedInUser ? loggedInUser.type : ""}) %>
+    <!-- <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #afbec9;"> -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/img/landx16.png" alt="" width="30" height="24">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav me-0">
+                    <li class="nav-item">
+                    <% const who = loggedInUser ? loggedInUser.type : "" %> 
+                    
+                    <% if (who == "user") { %>
+                        <a class="nav-link active" href="/user">User</a>
+                    <% } else if(who == "registrar") { %>
+                        <a class="nav-link active" href="/registrar">Reistrar</a>
+                    <% } else if (who == "igr") { %>
+                        <a class="nav-link active" href="/igr">IGR</a>
+                    <% } else if(who == "") { %>
+                        <a class="nav-link active" href="/login">Login</a>
+                    <% } %>
+                    </li>
+
+                    <% if (who != "") { %>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <%= loggedInUser.name %>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
+                            <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                            </ul>
+                        </li>
+                    <% } %>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
     <div class="container mt-3">
         <div class="text-center">

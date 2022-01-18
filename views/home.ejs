@@ -1,14 +1,121 @@
 <%- include('templates/header', {title: "Home"}) %>
 
 <body>
-    <%- include('templates/menu', {who: loggedInUser ? loggedInUser.type : ""}) %>
+    <!-- <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #afbec9;"> -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 
-    <div class="container mt-3">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/img/landx16.png" alt="" width="30" height="24">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav me-0">
+                    <li class="nav-item">
+                    <% const who = loggedInUser ? loggedInUser.type : "" %> 
+                    <% if (who == "user") { %>
+                        <a class="nav-link active" href="/user">User</a>
+                    <% } else if(who == "registrar") { %>
+                        <a class="nav-link active" href="/registrar">Reistrar</a>
+                    <% } else if (who == "igr") { %>
+                        <a class="nav-link active" href="/igr">IGR</a>
+                    <% } else if(who == "") { %>
+                        <a class="nav-link active" href="/login">Login</a>
+                    <% } %>
+                    </li>
+
+                    <% if (who != "") { %>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <%= loggedInUser.name %>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
+                            <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                            </ul>
+                        </li>
+                    <% } %>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-3 mb-5">
         <div class="text-center">
             <h3>Web Portal to</h3>
             <h1 class="text-info">Perform Real Estate Transactions Securely!</h1>
         </div>
+        
+        <h4 class="mt-5">View Estate Details and History</h4>
+        <form class="row mb-3" id="view_details">
+            <div class="col">
+                <input class="form-control" type="text" id="view_details_serveyNo" placeholder="view_details_serveyNo" value="101">
+            </div>
+            <div class="col">
+                <button class="btn btn-success" id="view_details_submit">View</button>
+            </div>
+        </form>
 
+        <table id="view_details_result" class="table table-bordered border-dark mb-3">
+            <thead hidden="hidden">
+                <tr>
+                    <th>Attribute</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr hidden="hidden">
+                    <td class="table-active"></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- <table id="table_owned" class="table table-dark table-bordered table-hover"> -->
+        <table id="view_transactions" class="table table-bordered table-hover mb-5" hidden="hidden">
+            <thead>
+                <tr>
+                    <th scope="col">Transaction</th>
+                    <th scope="col">Date-Time</th>
+                    <th scope="col">Seller</th>
+                    <th scope="col">Buyer</th>
+                    <th scope="col">Reason</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Office Code</th>
+                    <th scope="col">Approved By</th>
+                    <th scope="col">Approved On</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+
+        <h4>View User Details</h4>
+        <form class="row mb-3" id="view_user">
+            <div class="col">
+                <input class="form-control" type="text" id="view_user_uid" placeholder="view_user_uid" value="123456789021">
+            </div>
+            <div class="col">
+                <button class="btn btn-success" id="view_user_submit">View</button>
+            </div>
+        </form>
+
+        <table id="view_user_result" class="table table-bordered border-dark mb-3">
+            <thead hidden="hidden">
+                <tr>
+                    <th>Attribute</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr hidden="hidden">
+                    <td class="table-active"></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 
     <%- include('templates/footer') %>
@@ -26,9 +133,135 @@
                 })
             }
 
+            let format_row = (attr, val) => `<tr><td class="table-active">${attr}</td><td>${val}</td></tr>`
+
             /////////////////////////////////
 
-            
+            $("#view_details_submit").click(function(e) {
+                e.preventDefault();
+                const tb = $("#view_details_result tbody");
+                tb.html("");
+
+                $("#view_transactions").attr("hidden", "hidden");
+
+                const serveyNo = $("#view_details_serveyNo").val();
+
+                const data0 = {
+                    serveyNo: serveyNo
+                }
+
+                submitForm("/details/estate", "GET", data0)
+                .done(function(res) {
+                    $("#view_details_result thead").removeAttr('hidden');
+
+                    // {
+                    //     "area": 201,
+                    //     "beingSold": false,
+                    //     "location": "Village: X, Taluka: Y, District: Z, Pin: 123456",
+                    //     "officeCode": "THN1",
+                    //     "owner": "123456789021",
+                    //     "purchasedOn": "2022-01-16T03:29:00+05:30",
+                    //     "requests": [],
+                    //     "saleAvailability": true,
+                    //     "status": 1,
+                    //     "transactionsCount": 2
+                    // }
+
+                    tb.append(format_row("Servey No.", serveyNo));
+                    tb.append(format_row("Owner", res.owner));
+                    tb.append(format_row("Area", res.area + " m<sup>2</sup>"));
+                    tb.append(format_row("Location", res.location));
+                    tb.append(format_row("Purchased On", new Date(res.purchasedOn).toLocaleString()));
+                    tb.append(format_row("Status", res.status == 0 ? "Not Verified": (res.status == 1 ? "Verified" : "Suspended")));
+                    tb.append(format_row("Office Code", res.officeCode));
+                    tb.append(format_row("Sale Availability", res.saleAvailability ? "Available":"Not Available"));
+                    tb.append(format_row("Being Sold", res.beingSold ? "Yes":"No"));
+
+                    if(res.transactionsCount > 0) $("#view_transactions").removeAttr('hidden');
+                    const tb1 = $("#view_transactions tbody");
+
+                    for(let i=1; i<=res.transactionsCount; i++) {
+                        let data1 = {
+                            serveyNo: serveyNo,
+                            transactionNum: i
+                        }
+
+                        submitForm("/details/transaction", "GET", data1)
+                        .done(function(res1) {
+                            // {
+                            //     "approvedBy": "123456789013",
+                            //     "approvedDateTime": "2022-01-15T01:35:00+05:30",
+                            //     "buyer": "123456789022",
+                            //     "officeCode": "THN1",
+                            //     "price": 999,
+                            //     "reason": "sell",
+                            //     "seller": "123456789021",
+                            //     "transactionDateTime": "2022-01-15T01:33:00+05:30"
+                            // }
+
+                            tb1.append(`
+                            <tr>
+                                <td>${i}</td>
+                                <td>${new Date(res1.transactionDateTime).toLocaleString()}</td>
+                                <td>${res1.seller}</td>
+                                <td>${res1.buyer}</td>
+                                <td>${res1.reason}</td>
+                                <td>${res1.price}</td>
+                                <td>${res1.officeCode}</td>
+                                <td>${res1.approvedBy}</td>
+                                <td>${new Date(res1.approvedDateTime).toLocaleString()}</td>
+                            </tr>
+                            `)
+                        })
+                        .fail(function(err1) {
+                            console.log(err1)
+                        });
+                    }
+                })
+                .fail(function(err) {
+                    $("#view_details_result thead").attr('hidden', 'hidden');
+                    $("#view_details_result thead").attr('hidden', 'hidden');
+                    console.log(err);
+                });
+            });
+
+
+            $("#view_user_submit").click(function(e) {
+                e.preventDefault();
+
+                const tb = $("#view_user_result tbody");
+                tb.html("");
+
+                $("#view_user_result thead").attr('hidden', 'hidden');
+
+                const data = {
+                    uid: $("#view_user_uid").val()
+                }
+
+                submitForm('/details/user', "GET", data)
+                .done(function(res) {
+                    // {
+                    //     "name": "User01",
+                    //     "owned": [
+                    //         "101",
+                    //         "102",
+                    //         "103"
+                    //     ],
+                    //     "password": "123456",
+                    //     "status": 1,
+                    //     "uid": "123456789021"
+                    // }
+
+                    $("#view_user_result thead").removeAttr('hidden');
+
+                    tb.append(format_row("Name", res.name));
+                    tb.append(format_row("Status", res.status));
+                    tb.append(format_row("Owned", res.owned));
+                })
+                .fail(function(err) {
+                    console.log(err);
+                })
+            });
         });
     </script>
 

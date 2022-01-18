@@ -1,22 +1,48 @@
 <%- include('../templates/header', {title: "User"}) %>
 
 <body>
+    <!-- <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #afbec9;"> -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 
-    <div class="container">
-        <div class="text-center">
-            <h1>User Page</h1>
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/img/landx16.png" alt="" width="30" height="24">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav me-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/user">User</a>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <%= loggedInUser.name %>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
+                        <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
         </div>
+    </nav>
 
-        <%- include('../templates/menu') %>
+    <div class="container mt-3">
 
-        <pre><%= JSON.stringify(currentUser, null, 4) %></pre>
+        <h3>Verify User <small class="text-muted">(2FA)</small></h3>
+        <form class="row" id="user_verify">
+            <div class="col">
+                <input class="form-control" type="password" name="user_verify_password" id="user_verify_password"
+                    placeholder="user_verify_password" value="123456">
+            </div>
 
-        <h2>Verify User</h2>
-        <form id="user_verify">
-            <input type="password" name="user_verify_password" id="user_verify_password"
-                placeholder="user_verify_password" value="123456">
-
-            <button id="user_verify_submit">Submit</button>
+            <div class="col">
+                <button class="btn btn-info" id="user_verify_submit">Submit</button>
+            </div>
         </form>
         
         <a id="logout" href="/logout"></a>

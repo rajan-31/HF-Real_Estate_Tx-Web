@@ -106,4 +106,32 @@ router.post('/registrar/sell', allMiddlewares.isLoggedInRegistrar, (req, res) =>
 });
 
 
+router.post('/registrar/transaction', allMiddlewares.isLoggedInRegistrar, (req, res) => {
+    const formData = req.body;
+
+    const serveyNo = formData.serveyNo;
+    const num = formData.num;
+    const seller = formData.seller;
+    const buyer = formData.buyer;
+    const reason = formData.reason;
+    const proposedPrice = formData.proposedPrice;
+
+    const temp_tDateTime = new Date(formData.tDateTime);
+    const tDateTime = '20' + ("0" + temp_tDateTime.getFullYear()).slice(-2) + '-' + ("0" + (temp_tDateTime.getMonth() + 1)).slice(-2) + '-' + ("0" + temp_tDateTime.getDate()).slice(-2) + 'T' +  ("0" + temp_tDateTime.getHours()).slice(-2) + ':' + ("0" + temp_tDateTime.getMinutes()).slice(-2) + ':00+05:30';
+
+    const officeCode = formData.officeCode;
+    const approvedBy = formData.approvedBy;
+
+    const temp_aDateTime = new Date(formData.aDateTime);
+    const aDateTime = '20' + ("0" + temp_aDateTime.getFullYear()).slice(-2) + '-' + ("0" + (temp_aDateTime.getMonth() + 1)).slice(-2) + '-' + ("0" + temp_aDateTime.getDate()).slice(-2) + 'T' +  ("0" + temp_aDateTime.getHours()).slice(-2) + ':' + ("0" + temp_aDateTime.getMinutes()).slice(-2) + ':00+05:30';
+
+
+    contract.submitTransaction('Add_Transaction', serveyNo, num, seller, buyer, reason, proposedPrice, tDateTime, officeCode, approvedBy, aDateTime).then((payload) => {
+        res.status(200).json(JSON.parse(payload.toString()));
+    }).catch((err) => {
+        res.status(501).send(JSON.parse(err.toString()));
+    });
+});
+
+
 module.exports = router;

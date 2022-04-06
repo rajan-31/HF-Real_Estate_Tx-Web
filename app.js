@@ -12,7 +12,6 @@ const fs = require('fs');
 
 const app = express();
 
-
 require('dotenv').config();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
@@ -20,7 +19,7 @@ app.set("view engine", "ejs");
 app.use(methodOverride("_method"));
 app.use(flash());
 app.use("/", express.static(path.join(__dirname, "public"), {
-    etag: false,
+    // etag: false,
     maxAge: 1000 * 60 * 60   // 1 hr
 }));
 
@@ -114,15 +113,17 @@ passport.use('user', new LocalStrategy(function (uid, password, done) {
         const user = JSON.parse(payload.toString());
 
         if (!user) { return done(null, false); }
-        if (!user.password === password) { return done(null, false); }
+        if (user.password !== password) { return done(null, false); }
 
-        const toPass = {
-            uid: user.uid,
-            name: user.name,
-            type: 'user',
-            status: user.status
+        else {
+            const toPass = {
+                uid: user.uid,
+                name: user.name,
+                type: 'user',
+                status: user.status
+            }
+            return done(null, toPass);
         }
-        return done(null, toPass);
 
     }).catch((err) => {
         return done(err);
@@ -135,7 +136,7 @@ passport.use('registrar', new LocalStrategy(function (officeCode, password, done
         const registrar = JSON.parse(payload.toString());
 
         if (!registrar) { return done(null, false); }
-        if (!registrar.password === password) { return done(null, false); }
+        if (registrar.password !== password) { return done(null, false); }
 
         const toPass = {
             officeCode: officeCode,
@@ -157,7 +158,7 @@ passport.use('igr', new LocalStrategy(function (username, password, done) {
         const igr = JSON.parse(payload.toString());
 
         if (!igr) { return done(null, false); }
-        if (!igr.password === password) { return done(null, false); }
+        if (igr.password !== password) { return done(null, false); }
 
         const toPass = {
             id: username,

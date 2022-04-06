@@ -17,13 +17,13 @@
                     <li class="nav-item">
                     <% const who = loggedInUser ? loggedInUser.type : "" %> 
                     <% if (who == "user") { %>
-                        <a class="nav-link active" href="/user">User</a>
+                        <a class="nav-link" href="/user">User</a>
                     <% } else if(who == "registrar") { %>
-                        <a class="nav-link active" href="/registrar">Reistrar</a>
+                        <a class="nav-link" href="/registrar">Reistrar</a>
                     <% } else if (who == "igr") { %>
-                        <a class="nav-link active" href="/igr">IGR</a>
+                        <a class="nav-link" href="/igr">IGR</a>
                     <% } else if(who == "") { %>
-                        <a class="nav-link active" href="/login">Login</a>
+                        <a class="nav-link" href="/login">Login</a>
                     <% } %>
                     </li>
 
@@ -42,6 +42,10 @@
         </div>
     </nav>
 
+    <div id="full-screen-spinner-container" style="display: none;">
+        <div class="spinner-border" id="full-screen-spinner" role="status"></div>
+    </div>
+
     <div class="container mt-3 mb-5">
         <div class="text-center">
             <h3>Web Portal to</h3>
@@ -51,7 +55,7 @@
         <h4 class="mt-5">View Estate Details and History</h4>
         <form class="row mb-3" id="view_details">
             <div class="col">
-                <input class="form-control" type="text" id="view_details_serveyNo" placeholder="view_details_serveyNo" value="101">
+                <input class="form-control" type="text" id="view_details_ulpin" placeholder="ULPIN" value="12345678901234">
             </div>
             <div class="col">
                 <button class="btn btn-success" id="view_details_submit">View</button>
@@ -77,7 +81,7 @@
         <table id="view_transactions" class="table table-bordered table-hover mb-5" hidden="hidden">
             <thead>
                 <tr>
-                    <th scope="col">Transaction</th>
+                    <th scope="col" id="col_tran" style="cursor: pointer;">Transaction</th>
                     <th scope="col">Date-Time</th>
                     <th scope="col">Seller</th>
                     <th scope="col">Buyer</th>
@@ -95,7 +99,7 @@
         <h4>View User Details</h4>
         <form class="row mb-3" id="view_user">
             <div class="col">
-                <input class="form-control" type="text" id="view_user_uid" placeholder="view_user_uid" value="123456789021">
+                <input class="form-control" type="text" id="view_user_uid" placeholder="UID" value="123456789021">
             </div>
             <div class="col">
                 <button class="btn btn-success" id="view_user_submit">View</button>
@@ -137,17 +141,44 @@
 
             /////////////////////////////////
 
+            function sortTransactioTable() {
+                let rows =$("#col_tran").parents("table").children("tbody").children("tr").toArray();
+                rows.sort(function(a, b) {
+                    let aNum = Number(a.children[0].innerText);
+                    let bNum = Number(b.children[0].innerText);
+
+                    return aNum === bNum ? 0 : (aNum>bNum ? 1 : -1)
+                });
+
+                $("#view_transactions tbody").html("");
+
+                for(let i=0; i<rows.length; i++)
+                    $("#view_transactions tbody").append(rows[i].outerHTML);
+
+                console.log("sorted...");
+            }
+
+            $("#col_tran").click(function() {
+                sortTransactioTable();
+            });
+
+
             $("#view_details_submit").click(function(e) {
                 e.preventDefault();
+                $("#full-screen-spinner-container").show()
+
                 const tb = $("#view_details_result tbody");
                 tb.html("");
 
+                const tb1 = $("#view_transactions tbody");
+                tb1.html("");
+
                 $("#view_transactions").attr("hidden", "hidden");
 
-                const serveyNo = $("#view_details_serveyNo").val();
+                const ulpin = $("#view_details_ulpin").val();
 
                 const data0 = {
-                    serveyNo: serveyNo
+                    ulpin: ulpin
                 }
 
                 submitForm("/details/estate", "GET", data0)
@@ -167,7 +198,7 @@
                     //     "transactionsCount": 2
                     // }
 
-                    tb.append(format_row("Servey No.", serveyNo));
+                    tb.append(format_row("ULPIN", ulpin));
                     tb.append(format_row("Owner", res.owner));
                     tb.append(format_row("Area", res.area + " m<sup>2</sup>"));
                     tb.append(format_row("Location", res.location));
@@ -178,11 +209,11 @@
                     tb.append(format_row("Being Sold", res.beingSold ? "Yes":"No"));
 
                     if(res.transactionsCount > 0) $("#view_transactions").removeAttr('hidden');
-                    const tb1 = $("#view_transactions tbody");
+                    
 
                     for(let i=1; i<=res.transactionsCount; i++) {
                         let data1 = {
-                            serveyNo: serveyNo,
+                            ulpin: ulpin,
                             transactionNum: i
                         }
 
@@ -217,6 +248,8 @@
                             console.log(err1)
                         });
                     }
+
+                    $("#full-screen-spinner-container").hide()
                 })
                 .fail(function(err) {
                     $("#view_details_result thead").attr('hidden', 'hidden');
@@ -228,6 +261,7 @@
 
             $("#view_user_submit").click(function(e) {
                 e.preventDefault();
+                $("#full-screen-spinner-container").show();
 
                 const tb = $("#view_user_result tbody");
                 tb.html("");
@@ -257,10 +291,12 @@
                     tb.append(format_row("Name", res.name));
                     tb.append(format_row("Status", res.status));
                     tb.append(format_row("Owned", res.owned));
+
+                    $("#full-screen-spinner-container").hide()
                 })
                 .fail(function(err) {
                     console.log(err);
-                })
+                });
             });
         });
     </script>

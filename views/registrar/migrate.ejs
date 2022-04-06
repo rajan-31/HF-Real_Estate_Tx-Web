@@ -1,0 +1,205 @@
+<%- include('../templates/header', {title: "Migrate"}) %>
+
+<body>
+    <!-- <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #afbec9;"> -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="/img/landx16.png" alt="" width="30" height="24">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav me-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/registrar">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/migrate">Migrate</a>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            <%= loggedInUser.name %>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
+                            <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div id="full-screen-spinner-container" style="display: none;">
+        <div class="spinner-border" id="full-screen-spinner" role="status"></div>
+    </div>
+
+    <div class="container mt-3 mb-5">
+
+        <h3 class="mt-3">Create Estate</h3>
+        <form class="row" id="create_estate">
+            <div class="mb-2 col-md-6">
+                <input type="text" class="form-control" id="create_estate_ulpin" name="create_estate_ulpin" placeholder="create_estate_ulpin" value="12345678901234">
+            </div>
+            <div class="mb-2 col-md-6">
+                <input type="text" class="form-control" id="create_estate_owner" name="create_estate_owner" placeholder="create_estate_owner" value="123456789021">
+            </div>
+
+            <div class="mb-2 col-12">
+                <label class="form-label" for="create_estate_location">Location</label>
+                <textarea class="form-control" id="create_estate_location" name="create_estate_location" cols="50" rows="2">Village: X, Taluka: Y, District: Z, Pin: 123456</textarea>
+            </div>
+
+            <div class="input-group mb-2 col">
+                <input class="form-control" type="number" id="create_estate_area" name="create_estate_area" placeholder="create_estate_area" min="1" step="1" value="201">                
+                <span class="input-group-text">m<sup>2</sup></span>
+            </div>
+
+            <div class="mb-2 col">
+                <input class="form-control" type="datetime-local" id="create_estate_purchasedOn" name="create_estate_purchasedOn" placeholder="create_estate_purchasedOn" value="2022-12-15T13:15">
+            </div>
+            <div class="mb-2 col">
+                <input class="form-control" type="number" id="create_estate_transactionsCount" name="create_estate_transactionsCount" placeholder="create_estate_transactionsCount" min="0" step="1" value="0">
+            </div>
+
+            <div class="col-12">
+                <button class="btn btn-primary" id="create_estate_submit">Submit</button>
+            </div>
+        </form>
+
+        <h3 class="mt-3">Add Old Transaction</h3>
+        <form class="row" id="add_transaction">
+            <div class="mb-2 col-md-6">
+                <input type="text" class="form-control" id="add_transaction_ulpin" placeholder="add_transaction_ulpin" value="12345678901235">
+            </div>
+            <div class="mb-2 col-md-6">
+                <input type="number" class="form-control" id="add_transaction_Num" placeholder="add_transaction_Num" value="1" min="0" step="1">
+            </div>
+
+            <div class="mb-2 col-md-6">
+                <input type="text" class="form-control" id="add_transaction_seller" placeholder="add_transaction_seller" value="123456789021">
+            </div>
+            <div class="mb-2 col-md-6">
+                <input type="text" class="form-control" id="add_transaction_buyer" placeholder="add_transaction_buyer" value="123456789022">
+            </div>
+
+            <div class="mb-2 col-md-6">
+                <select class="form-select" id="add_transaction_reason">
+                    <option value="">--Please choose a reason for sell--</option>
+                    <option value="sell" selected>Sell</option>
+                    <option value="will">Will</option>
+                    <option value="inheritance">Inheritance</option>
+                    <option value="gift">Gift</option>
+                </select>
+            </div>
+            <div class="mb-2 col-md-6">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="add_transaction_proposedPrice" placeholder="add_transaction_proposedPrice" value="999">
+                    <span class="input-group-text">₹</span>
+                </div>
+            </div>
+
+            <div class="col-12 mb-2">
+                <div class=" col-md-6 mx-auto">
+                    <input class="form-control" type="datetime-local" id="add_transaction_transactionDateTime" placeholder="add_transaction_transactionDateTime">
+                </div>
+            </div>
+
+            <div class="mb-2 col-md-6">
+                <input type="text" class="form-control" id="add_transaction_officeCode" placeholder="add_transaction_officeCode" value="THN1">
+            </div>
+            <div class="mb-2 col-md-6">
+                <input type="text" class="form-control" id="add_transaction_approvedBy" placeholder="add_transaction_approvedBy" value="123456789013">
+            </div>
+
+            <div class="mb-2 col-md-6 mx-auto">
+                <input class="form-control" type="datetime-local" id="add_transaction_approvedDateTime" placeholder="add_transaction_approvedDateTime">
+            </div>
+            
+
+            <div class="col-12">
+                <button class="btn btn-primary" id="add_transaction_submit">Submit</button>
+            </div>
+        </form>
+
+    </div>
+
+    <%- include('../templates/footer') %>
+
+    <script>
+        'use strict';
+        
+        $(document).ready(function () {
+            function submitForm(url, method, data) {
+                return $.ajax({
+                    type: method,
+                    url: url,
+                    data: data,
+                    dataType: 'json',
+                })
+            }
+
+            /////////////////////////////////
+
+            
+            $("#create_estate_submit").click(function (e) { 
+                e.preventDefault();
+                $("#full-screen-spinner-container").show();
+                
+                const data = {
+                    ulpin : $("#create_estate_ulpin").val(),
+                    owner : $("#create_estate_owner").val(),
+                    location : $("#create_estate_location").val(),
+                    area : $("#create_estate_area").val(),
+                    purchasedOn : $("#create_estate_purchasedOn").val()+":00+05:30",
+                    transactionsCount : $("#create_estate_transactionsCount").val()
+                }
+
+                submitForm("/registrar/estate", "POST", data)
+                .done(function(res) {
+                    console.log(res);
+                    $("#full-screen-spinner-container").hide();
+                })
+                .fail(function(err) {
+                    console.log(err);
+                });
+            });
+
+            $("#add_transaction_submit").click(function(e) {
+                e.preventDefault();
+                $("#full-screen-spinner-container").show();
+
+                const data = {
+                    ulpin : $("#add_transaction_ulpin").val(),
+                    num : $("#add_transaction_Num").val(),
+                    seller : $("#add_transaction_seller").val(),
+                    buyer : $("#add_transaction_buyer").val(),
+                    reason : $("#add_transaction_reason").val(),
+                    proposedPrice : $("#add_transaction_proposedPrice").val(),
+                    tDateTime : $("#add_transaction_transactionDateTime").val(),
+                    officeCode : $("#add_transaction_officeCode").val(),
+                    approvedBy : $("#add_transaction_approvedBy").val(),
+                    aDateTime : $("#add_transaction_approvedDateTime").val()
+                }
+
+                submitForm("/registrar/transaction", "POST", data)
+                .done(function(res) {
+                    console.log(res);
+                    $("#full-screen-spinner-container").hide();
+                })
+                .fail(function(err) {
+                    console.log(err);
+                });
+            });
+
+        });
+    </script>
+
+</body>
+
+</html>

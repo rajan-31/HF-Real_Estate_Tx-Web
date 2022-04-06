@@ -15,7 +15,10 @@
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav me-0">
                     <li class="nav-item">
-                        <a class="nav-link active" href="/registrar">Reistrar</a>
+                        <a class="nav-link active" href="/registrar">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/migrate">Migrate</a>
                     </li>
 
                     <li class="nav-item dropdown">
@@ -32,9 +35,38 @@
         </div>
     </nav>
 
+    <div id="full-screen-spinner-container" style="display: none;">
+        <div class="spinner-border" id="full-screen-spinner" role="status"></div>
+    </div>
+
     <div class="container mt-3 mb-5">
 
-        <h3 class="mt-3">Create User</h3>
+        <h3 class="mt-3">To approve</h3>
+        <pre id="toApprove_data" hidden="hidden"><%= JSON.stringify(toApprove, null, 4) %></pre>
+
+        <div style="overflow-y: auto;">
+            <!-- <table id="table_owned" class="table table-dark table-bordered table-hover"> -->
+            <table id="table_toApprove" class="table table-bordered table-hover">
+                <thead>
+                    <tr class="align-middle">
+                        <th scope="col">ULPIN</th>
+                        <th scope="col">Owner</th>
+                        <th scope="col">Buyer</th>
+                        <th scope="col">Taxes Paid</th>
+                        <th scope="col" class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="5" class="text-center">--- No Pending Requests ---</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <hr>
+
+        <!-- <h3 class="mt-3">Create User</h3>
         <form class="row" id="create_user">
 
             <div class="col">
@@ -49,34 +81,35 @@
             <div class="col">
                 <button class="btn btn-primary" id="create_user_submit">Submit</button>
             </div>
-        </form>
+        </form> -->
 
         <h3 class="mt-3">Modify User</h3>
-        <form class="row" id="modify_user">
-            <div class="col">
-                <input type="text" class="form-control" id="modify_user_uid" name="modify_user_uid" placeholder="modify_user_uid" value="123456789023">
+        <form class="row align-items-end" id="modify_user">
+            <div class="col-md-3 col-sm-12 mb-2">
+                <input type="text" class="form-control" id="modify_user_uid" name="modify_user_uid" placeholder="UID" value="123456789023">
             </div>
-            <div class="col">
-                <input type="text" class="form-control" id="modify_user_name" name="modify_user_name" placeholder="modify_user_name" value="UserX">
+            <div class="col-md-3 col-sm-12 mb-2">
+                <input type="text" class="form-control" id="modify_user_name" name="modify_user_name" placeholder="Name (First Middle Last)" value="UserX">
             </div>
-            <div class="col">
+            <div class="col-md-3 col-sm-12 mb-2">
+                <label for="modify_user_name" class="form-label">Status</label>
                 <select class="form-select" name="modify_user_status" id="modify_user_status">
                     <option value="">--Please choose a Status--</option>
                     <option value="" selected>No Change</option>
-                    <option value="not verified">Not Verified</option>
+                    <option value="not verified">Remove Verification</option>
                     <option value="suspend">Suspend</option>
                 </select>
             </div>
 
-            <div class="col">
+            <div class="col-md-3 col-sm-12 mb-2">
                 <button class="btn btn-primary" id="modify_user_submit">Submit</button>
             </div>
         </form>
 
-        <h3 class="mt-3">Create Estate</h3>
+        <!-- <h3 class="mt-3">Create Estate</h3>
         <form class="row" id="create_estate">
             <div class="mb-2 col-md-6">
-                <input type="text" class="form-control" id="create_estate_serveyNo" name="create_estate_serveyNo" placeholder="create_estate_serveyNo" value="101">
+                <input type="text" class="form-control" id="create_estate_ulpin" name="create_estate_ulpin" placeholder="create_estate_ulpin" value="12345678901234">
             </div>
             <div class="mb-2 col-md-6">
                 <input type="text" class="form-control" id="create_estate_owner" name="create_estate_owner" placeholder="create_estate_owner" value="123456789021">
@@ -102,12 +135,17 @@
             <div class="col-12">
                 <button class="btn btn-primary" id="create_estate_submit">Submit</button>
             </div>
-        </form>
+        </form> -->
 
         <h3 class="mt-3">Modify Estate</h3>
         <form class="row" id="modify_estate">
             <div class="mb-2 col-md-6">
-                <input type="text" class="form-control" id="modify_estate_serveyNo" name="modify_estate_serveyNo" placeholder="modify_estate_serveyNo" value="101">
+                <input type="text" class="form-control" id="modify_estate_ulpin" name="modify_estate_ulpin" placeholder="ULPIN" value="12345678901234">
+            </div>
+
+            <div class="input-group mb-2 col-md-6">
+                <input class="form-control" type="number" id="modify_estate_area" name="modify_estate_area" placeholder="Area" min="1" step="1">                
+                <span class="input-group-text">m<sup>2</sup></span>
             </div>
 
             <div class="mb-2 col-12">
@@ -115,16 +153,11 @@
                 <textarea class="form-control" id="modify_estate_location" name="modify_estate_location" cols="50" rows="2"></textarea>
             </div>
 
-            <div class="input-group mb-2 col">
-                <input class="form-control" type="number" id="modify_estate_area" name="modify_estate_area" placeholder="modify_estate_area" min="1" step="1">                
-                <span class="input-group-text">m<sup>2</sup></span>
+            <div class="mb-2 col-md-6">
+                <input class="form-control" type="datetime-local" id="modify_estate_purchasedOn" name="modify_estate_purchasedOn" placeholder="Purchased On">
             </div>
-
-            <div class="mb-2 col">
-                <input class="form-control" type="datetime-local" id="modify_estate_purchasedOn" name="modify_estate_purchasedOn" placeholder="modify_estate_purchasedOn">
-            </div>
-            <div class="mb-2 col">
-                <input class="form-control" type="number" id="modify_estate_transactionsCount" name="modify_estate_transactionsCount" placeholder="modify_estate_transactionsCount" min="0" step="1">
+            <div class="mb-2 col-md-6">
+                <input class="form-control" type="number" id="modify_estate_transactionsCount" name="modify_estate_transactionsCount" placeholder="Transaction Count" min="0" step="1">
             </div>
 
             <div class="col-12">
@@ -132,10 +165,10 @@
             </div>
         </form>
 
-        <h3 class="mt-3">Add Old Transaction</h3>
+        <!-- <h3 class="mt-3">Add Old Transaction</h3>
         <form class="row" id="add_transaction">
             <div class="mb-2 col-md-6">
-                <input type="text" class="form-control" id="add_transaction_serveyNo" placeholder="add_transaction_serveyNo" value="102">
+                <input type="text" class="form-control" id="add_transaction_ulpin" placeholder="add_transaction_ulpin" value="12345678901235">
             </div>
             <div class="mb-2 col-md-6">
                 <input type="number" class="form-control" id="add_transaction_Num" placeholder="add_transaction_Num" value="1" min="0" step="1">
@@ -185,14 +218,13 @@
             <div class="col-12">
                 <button class="btn btn-primary" id="add_transaction_submit">Submit</button>
             </div>
-        </form>
+        </form> -->
 
-        <hr>
-
+        
         <!-- <h3 class="mt-3">Check Stamp Duty and Registration Charges Paid</h4>
             <form class="row" id="check_tax">
                 <div class="col-4 mb-2">
-                    <input class="form-control" type="text" id="check_tax_serveyNo" name="check_tax_serveyNo" placeholder="check_tax_serveyNo" value="101">
+                    <input class="form-control" type="text" id="check_tax_ulpin" name="check_tax_ulpin" placeholder="check_tax_ulpin" value="12345678901234">
                 </div>
                 <div class="col-4 mb-2">
                     <input class="form-control" type="number" id="check_tax_transactionCount" name="check_tax_transactionCount" placeholder="check_tax_transactionCount" value="1">
@@ -212,12 +244,12 @@
                 </div>
             </div> -->
 
-        <h3 class="mt-3">Approve Sell of Estate</h3>
+        <!-- <h3 class="mt-3">Approve Sell of Estate</h3>
         <form class="row" id="approve_sell">
 
             <div class="mb-2 col-md-6">
-                <select class="form-select" name="approve_sell_serveyNo" id="approve_sell_serveyNo">
-                    <option value="">--Please choose a Servey No.--</option>
+                <select class="form-select" name="approve_sell_ulpin" id="approve_sell_ulpin">
+                    <option value="">--Please choose a ULPIN--</option>
                 </select>
             </div>
             <div class="mb-2 col-md-6">
@@ -228,23 +260,7 @@
             <div class="col-12">
                 <button class="btn btn-primary" id="approve_sell_submit">Submit</button>
             </div>
-        </form>
-
-        <h3 class="mt-3">To approve</h3>
-        <pre id="toApprove_data" hidden="hidden"><%= JSON.stringify(toApprove, null, 4) %></pre>
-
-        <!-- <table id="table_owned" class="table table-dark table-bordered table-hover"> -->
-        <table id="table_toApprove" class="table table-bordered table-hover">
-            <thead>
-                <tr>
-                    <th scope="col">Servey No.</th>
-                    <th scope="col">Transaction Count</th>
-                    <th scope="col">Taxes Paid</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
+        </form> -->
 
     </div>
 
@@ -263,10 +279,80 @@
                 })
             }
 
-            /////////////////////////////////
+            //////////////////////
+            $("#full-screen-spinner-container").show();
+            const list_toApprove = JSON.parse($("#toApprove_data").html());
+            
+            if(list_toApprove.length === 0)
+            $("#full-screen-spinner-container").hide();
 
-            $("#create_user_submit").click(function (e) { 
+            const tb = $("#table_toApprove tbody");
+            if(list_toApprove.length > 0) tb.html("");
+            // const appr = $("#approve_sell_ulpin");
+
+            list_toApprove.forEach(element => {
+                const temp = element.split("_");
+                const ulpin = temp[1];
+                const transactionNum = temp[2];
+
+                submitForm("/tax/check", "GET", {transactionId : element})
+                .done(function(res1) {
+                    let data1 = {
+                        ulpin: ulpin,
+                        transactionNum: transactionNum
+                    }
+
+                    submitForm("/details/transaction", "GET", data1)
+                    .done(function(res2) {
+
+                        submitForm('/details/user', "GET", {uid: res2.seller})
+                        .done(function(res3) {
+                            submitForm('/details/user', "GET", {uid: res2.buyer})
+                            .done(function(res4) {
+                                let row = `<tr>
+                                    <td class="align-middle">${ulpin}</td>
+                                    <td class="align-middle">${res2.seller} (${res3.name})</td>
+                                    <td class="align-middle">${res2.buyer} (${res4.name})</td>
+                                    `
+                                if(res1.isPaid) {
+                                    row += `
+                                        <td class="align-middle">Yes</td>
+                                        <td class="text-center" data-ulpin=${ulpin}><button class="btn btn-success m-1 approve_sell_action" data-action="accept"><i class="fas fa-check-circle "></i></button><button class="btn btn-danger m-1 approve_sell_action" data-action="reject"><i class="fas fa-times-circle"></i></button></td>
+                                    </tr>`
+                                } else {
+                                    row += `
+                                        <td class="align-middle">No</td>
+                                        <td class="text-center" data-ulpin=${ulpin}><button class="btn btn-danger approve_sell_action" data-action="reject"><i class="fas fa-times-circle"></i></button></td>
+                                    </tr>`
+                                }
+
+                                tb.append(row);
+                                $("#full-screen-spinner-container").hide();
+                            })
+                            .fail(function(err4) {
+                                console.log(err4);
+                            });
+
+                        })
+                        .fail(function(err3) {
+                            console.log(err3);
+                        });
+                    })
+                    .fail(function(err2) {
+                        console.log(err2)
+                    });
+                })
+                .fail(function(err1) {
+                    console.log(err1)
+                });
+
+                // appr.append(`<option value="${ulpin}">${ulpin}</option>`)
+            });
+            //////////////////////
+
+            /* $("#create_user_submit").click(function (e) { 
                 e.preventDefault();
+                $("#full-screen-spinner-container").show()
                 
                 const data = {
                     uid : $("#create_user_uid").val(),
@@ -277,15 +363,17 @@
                 submitForm("/registrar/user", "POST", data)
                 .done(function(res) {
                     console.log(res);
+                    $("#full-screen-spinner-container").hide()
                 })
                 .fail(function(err) {
                     console.log(err);
                 });
-            });
+            }); */
             
             
             $("#modify_user_submit").click(function (e) { 
                 e.preventDefault();
+                $("#full-screen-spinner-container").show();
                 
                 const data = {
                     uid : $("#modify_user_uid").val(),
@@ -296,6 +384,7 @@
                 submitForm("/registrar/user?_method=PUT", "POST", data)
                 .done(function(res) {
                     console.log(res);
+                    $("#full-screen-spinner-container").hide();
                 })
                 .fail(function(err) {
                     console.log(err);
@@ -303,11 +392,12 @@
             });
 
             
-            $("#create_estate_submit").click(function (e) { 
+            /* $("#create_estate_submit").click(function (e) { 
                 e.preventDefault();
+                $("#full-screen-spinner-container").show();
                 
                 const data = {
-                    serveyNo : $("#create_estate_serveyNo").val(),
+                    ulpin : $("#create_estate_ulpin").val(),
                     owner : $("#create_estate_owner").val(),
                     location : $("#create_estate_location").val(),
                     area : $("#create_estate_area").val(),
@@ -318,18 +408,20 @@
                 submitForm("/registrar/estate", "POST", data)
                 .done(function(res) {
                     console.log(res);
+                    $("#full-screen-spinner-container").hide();
                 })
                 .fail(function(err) {
                     console.log(err);
                 });
-            });
+            }); */
 
 
             $("#modify_estate_submit").click(function (e) { 
                 e.preventDefault();
+                $("#full-screen-spinner-container").show();
                 
                 const data = {
-                    serveyNo : $("#modify_estate_serveyNo").val(),
+                    ulpin : $("#modify_estate_ulpin").val(),
                     location : $("#modify_estate_location").val(),
                     area : $("#modify_estate_area").val(),
                     purchasedOn : $("#modify_estate_purchasedOn").val() == '' ? '' : $("#modify_estate_purchasedOn").val()+":00+05:30",
@@ -339,6 +431,7 @@
                 submitForm("/registrar/estate?_method=PUT", "PUT", data)
                 .done(function(res) {
                     console.log(res);
+                    $("#full-screen-spinner-container").hide();
                 })
                 .fail(function(err) {
                     console.log(err);
@@ -346,17 +439,53 @@
             });
 
 
+            /*
             $("#approve_sell_submit").click(function (e) { 
                 e.preventDefault();
+                $("#full-screen-spinner-container").show();
                 
                 const data = {
-                    serveyNo : $("#approve_sell_serveyNo").val(),
+                    ulpin : $("#approve_sell_ulpin").val(),
                     password : $("#approve_sell_password").val()
                 }
 
                 submitForm("/registrar/sell", "POST", data)
                 .done(function(res) {
                     console.log(res);
+                    $("#full-screen-spinner-container").hide();
+                })
+                .fail(function(err) {
+                    console.log(err);
+                });
+            });
+            */
+
+            $(document).on("click", ".approve_sell_action", function (e) { 
+                e.preventDefault();
+                $("#full-screen-spinner-container").show();
+
+                const pressed_btn = $(this);
+                const data_td = pressed_btn.parent()
+                
+                const data = {
+                    ulpin : data_td.attr("data-ulpin"),
+                    action: pressed_btn.attr("data-action")
+                }
+               
+                submitForm("/registrar/sell", "POST", data)
+                .done(function(res) {
+                    console.log(res);
+
+                    data_td.parent().remove()
+                    if($("#table_toApprove tbody").children().length === 0) {
+                        $("#table_toApprove tbody").html(`
+                        <tr>
+                            <td colspan="5" class="text-center">--- No Pending Requests ---</td>
+                        </tr>
+                        `);
+                    }
+
+                    $("#full-screen-spinner-container").hide();
                 })
                 .fail(function(err) {
                     console.log(err);
@@ -366,7 +495,7 @@
             $("#check_tax_submit").click(function (e) { 
                 e.preventDefault();
 
-                const _transactionId = "transaction" + '_' + $("#check_tax_serveyNo").val() + '_' + $("#check_tax_transactionCount").val();
+                const _transactionId = "transaction" + '_' + $("#check_tax_ulpin").val() + '_' + $("#check_tax_transactionCount").val();
                 
                 const data = {
                     transactionId : _transactionId
@@ -383,11 +512,12 @@
                 });
             });
 
-            $("#add_transaction_submit").click(function(e) {
+            /* $("#add_transaction_submit").click(function(e) {
                 e.preventDefault();
+                $("#full-screen-spinner-container").show();
 
                 const data = {
-                    serveyNo : $("#add_transaction_serveyNo").val(),
+                    ulpin : $("#add_transaction_ulpin").val(),
                     num : $("#add_transaction_Num").val(),
                     seller : $("#add_transaction_seller").val(),
                     buyer : $("#add_transaction_buyer").val(),
@@ -402,43 +532,12 @@
                 submitForm("/registrar/transaction", "POST", data)
                 .done(function(res) {
                     console.log(res);
+                    $("#full-screen-spinner-container").hide();
                 })
                 .fail(function(err) {
                     console.log(err);
                 });
-            });
-
-
-            //////////////////////
-            const list_toApprove = JSON.parse($("#toApprove_data").html());
-
-            const tb = $("#table_toApprove tbody");
-            const appr = $("#approve_sell_serveyNo");
-
-            list_toApprove.forEach(element => {
-                const temp = element.split("_");
-                const temp_serveyNo = temp[1];
-                const temp_transactionCount = temp[2];
-
-                submitForm("/tax/check", "GET", {transactionId : element})
-                .done(function(res) {
-                    tb.append(`<tr>
-                        <td>${temp_serveyNo}</td>
-                        <td>${temp_transactionCount}</td>
-                        <td>${res.isPaid ? "Paid" : "Not Paid"}</td>
-                    </tr>`)
-                })
-                .fail(function(err) {
-                    tb.append(`<tr>
-                        <td>${temp_serveyNo}</td>
-                        <td>${temp_transactionCount}</td>
-                        <td>No record found</td>
-                    </tr>`)
-                });
-
-                appr.append(`<option value="${temp_serveyNo}">${temp_serveyNo}</option>`)
-            });
-            //////////////////////
+            }); */
 
         });
     </script>

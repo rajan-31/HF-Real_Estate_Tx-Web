@@ -6,3 +6,26 @@
 .modal-content {
     color: black;
 } */
+
+#full-screen-spinner-container {
+    background: rgb(0 0 0 / 37%);
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    overflow-y: auto;
+    margin: auto;
+}
+
+#full-screen-spinner {
+    position: absolute;
+    z-index: 9999;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}

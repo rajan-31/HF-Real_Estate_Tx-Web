@@ -32,25 +32,29 @@
         </div>
     </nav>
 
+    <div id="full-screen-spinner-container" style="display: none;">
+        <div class="spinner-border" id="full-screen-spinner" role="status"></div>
+    </div>
+
     <div class="container mt-3">
 
         <h3>Create New Registrar</h3>
         <form id="create_registrar" class="row">
             <div class="mb-2 col-md-6">
-                <input type="text" class="form-control" id="create_registrar_officeCode" name="create_registrar_officeCode" placeholder="create_registrar_officeCode" value="THN2">
+                <input type="text" class="form-control" id="create_registrar_officeCode" name="create_registrar_officeCode" placeholder="Office Code" value="THN2">
             </div>
             <div class="mb-2 col-md-6">
-                <input type="password" class="form-control" id="create_registrar_registrarPassword" name="create_registrar_registrarPassword" placeholder="create_registrar_registrarPassword" value="123456">
+                <input type="password" class="form-control" id="create_registrar_registrarPassword" name="create_registrar_registrarPassword" placeholder="Registrar Password" value="123456">
             </div>
             <div class="mb-2 col-md-6">
-                <input type="text" class="form-control" id="create_registrar_uid" name="create_registrar_uid" placeholder="create_registrar_uid" value="123456789014">
+                <input type="text" class="form-control" id="create_registrar_uid" name="create_registrar_uid" placeholder="UID" value="123456789014">
             </div>
             <div class="mb-2 col-md-6">
-                <input type="text" class="form-control" id="create_registrar_name" name="create_registrar_name" placeholder="create_registrar_name" value="Admin2">
+                <input type="text" class="form-control" id="create_registrar_name" name="create_registrar_name" placeholder="Name" value="Registrar2">
             </div>
 
             <div class="mb-2 col-12">
-                <input type="password" class="form-control" id="create_registrar_password" name="create_registrar_password" placeholder="create_registrar_password" value="123456">
+                <input type="password" class="form-control" id="create_registrar_password" name="create_registrar_password" placeholder="Your Password" value="123456">
             </div>
 
             <div class="col-12">
@@ -81,6 +85,7 @@
 
             $("#create_registrar_submit").click(function (e) { 
                 e.preventDefault();
+                $("#full-screen-spinner-container").show();
                 
                 const data = {
                     officeCode : $("#create_registrar_officeCode").val(),
@@ -92,8 +97,10 @@
 
                 submitForm("/igr/registrar", "POST", data)
                 .always(function(res) {
-                    if(res.status == 200)
+                    if(res.status == 200) {
                         console.log(res.responseText);
+                        $("#full-screen-spinner-container").hide();
+                    }
                     else
                         console.log(res);
                 });

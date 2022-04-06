@@ -31,61 +31,89 @@
         </div>
     </nav>
 
+    <div id="full-screen-spinner-container" style="display: none;">
+        <div class="spinner-border" id="full-screen-spinner" role="status"></div>
+    </div>
+
     <div class="container mt-3 mb-5">
 
         <h4 class="mt-3">Owned</h4>
         <pre id="owned_estate_data" hidden="hidden"><%= JSON.stringify(owned) %></pre>
 
-        <!-- <table id="table_owned" class="table table-dark table-bordered table-hover"> -->
-        <table id="table_owned" class="table table-bordered table-hover">
-            <thead>
-                <tr>
-                    <th scope="col">Servey No.</th>
-                    <th scope="col">Office Code</th>
-                    <th scope="col">Area</th>
-                    <th scope="col">Sale Availability</th>
-                    <th scope="col">Being sold</th>
-                    <th scope="col">More</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
+        <div style="overflow-y: auto;">
+            <!-- <table id="table_owned" class="table table-dark table-bordered table-hover"> -->
+            <table id="table_owned" class="table table-bordered table-hover">
+                <thead>
+                    <tr class="align-middle">
+                        <th scope="col">ULPIN</th>
+                        <th scope="col">Office Code</th>
+                        <th scope="col">Area (m<sup>2</sup>)</th>
+                        <th scope="col">Sale Availability</th>
+                        <th scope="col" data-bs-toggle="tooltip" data-bs-placement="top" title="Temporarily locked, due to you accepted to sell this.">Being Sold</th>
+                        <th scope="col" class="text-center">More</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="6" class="text-center">--- Empty ---</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
-        
+        <h4 class="mt-3">Requested</h4>
+        <pre id="requested_user_data" hidden="hidden"><%= JSON.stringify(requested) %></pre>
 
-        <h4 class="mt-4">Verify Land <small class="text-muted">(Confirm details of newly added estate)</small></h4>
+        <div style="overflow-y: auto;">
+            <!-- <table id="table_requested" class="table table-dark table-bordered table-hover"> -->
+            <table id="table_requested" class="table table-bordered table-hover">
+                <thead>
+                    <tr class="align-middle">
+                        <th scope="col">ULPIN</th>
+                        <th scope="col">Proposed Price (₹)</th>
+                        <th scope="col">Date-Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="3" class="text-center">--- Empty ---</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h4 class="mt-5">Verify Land <small class="text-muted">(Confirm details of newly added estate)</small></h4>
         <form id="estate_verify">
 
             <div class="row mb-3">
-                <div class="col">
-                    <select class="form-select" id="estate_verify_serveyNo" name="estate_verify_serveyNo">
-                        <option value="">--Please choose a Servey No.--</option>
+                <div class="col-md-4 mb-2">
+                    <select class="form-select" id="estate_verify_ulpin" name="estate_verify_ulpin">
+                        <option value="">--Please choose a ULPIN--</option>
                     </select>
                 </div>
-                <div class="col">
+                <div class="col-md-4 mb-2">
                     <input type="password" class="form-control" name="estate_verify_password"
-                        id="estate_verify_password" placeholder="estate_verify_password" value="123456">
+                        id="estate_verify_password" placeholder="Password" value="123456">
+                </div>
+                <div class="col-md-4 mb-2">
+                    <button id="estate_verify_submit" type="submit" class="btn btn-primary">Submit</button>
                 </div>
             </div>
 
-            <div class="col-12">
-                <button id="estate_verify_submit" type="submit" class="btn btn-primary">Submit</button>
-            </div>
         </form>
 
         
 
-        <h4 class="mt-4">Change Estate Availability</h4>
+        <h4 class="mt-5">Change Estate Availability</h4>
         <form id="estate_avail">
 
             <div class="row mb-3">
-                <div class="col">
-                    <select class="form-select" name="estate_avail_serveyNo" id="estate_avail_serveyNo">
-                        <option value="">--Please choose a Servey No.--</option>
+                <div class="col-md-4 mb-2">
+                    <select class="form-select" name="estate_avail_ulpin" id="estate_avail_ulpin">
+                        <option value="">--Please choose a ULPIN--</option>
                     </select>
                 </div>
-                <div class="col">
+                <div class="col-md-4 mb-2 d-flex justify-content-md-around align-items-center">
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="radio" id="estate_avail_choice1"
                             name="estate_avail_choice" value="true" checked="checked">
@@ -98,47 +126,46 @@
                     </div>
 
                 </div>
-            </div>
-            <div class="col-12">
-                <button id="estate_avail_submit" type="submit" class="btn btn-primary">Submit</button>
+                <div class="col-md-4 mb-2">
+                    <button id="estate_avail_submit" type="submit" class="btn btn-primary">Submit</button>
+                </div>
             </div>
         </form>
 
-        
-
-        <h4 class="mt-4">Request to Buy Estate</h4>
+        <h4 class="mt-5">Request to Buy Estate</h4>
         <form id="estate_buy">
             <div class="row mb-3">
-                <div class="col">
-                    <input type="text" class="form-control" id="estate_buy_serveyNo" name="estate_buy_serveyNo" placeholder="estate_buy_serveyNo"
-                    value="101">
+                <div class="col-md-4 mb-2">
+                    <input type="text" class="form-control" id="estate_buy_ulpin" name="estate_buy_ulpin" placeholder="ULPIN"
+                    value="12345678901234">
                 </div>
-                <div class="col">
+                <div class="col-md-4 mb-2">
                     <div class="input-group">
                         <input type="text" class="form-control" id="estate_buy_proposedPrice" name="estate_buy_proposedPrice"
-                    placeholder="estate_buy_proposedPrice" value="999">
+                    placeholder="Proposed Price" value="999">
                         <span class="input-group-text">₹</span>
                     </div>
                 </div>
-            </div>
-            <div class="col-12">
-                <button id="estate_buy_submit" type="submit" class="btn btn-primary">Submit</button>
+                <div class="col-md-4 mb-2">
+                    <button id="estate_buy_submit" type="submit" class="btn btn-primary">Submit</button>
+                </div>
             </div>
         </form>
 
         
 
-        <h4 class="mt-4">Accept Buyer's Request</h4>
+        <!-- <h4 class="mt-5">Accept Buyer's Request</h4>
         <form id="estate_sell">
             <div class="row mb-3">
                 <div class="col">
-                    <select class="form-select" id="estate_sell_serveyNo" name="estate_sell_serveyNo">
-                        <option value="">--Please choose a Servey No.--</option>
+                    <select class="form-select" id="estate_sell_ulpin" name="estate_sell_ulpin">
+                        <option value="">--Please choose a ULPIN--</option>
                     </select>
                 </div>
                 <div class="col">
-                    <input type="text" class="form-control" id="estate_sell_buyer" name="estate_sell_buyer" placeholder="estate_sell_buyer"
-                    value="123456789022">
+                    <select class="form-select" id="estate_sell_buyer" name="estate_sell_buyer">
+                        <option value="">--Please choose a Buyer--</option>
+                    </select>
                 </div>
             </div>
 
@@ -164,22 +191,22 @@
             <div class="col-12">
                 <button id="estate_sell_submit" type="submit" class="btn btn-primary">Submit</button>
             </div>
-        </form>
+        </form> -->
 
         
 
-        <h4 class="mt-4">Pay Stamp Duty and Registration Charges</h4>
+        <h4 class="mt-5">Pay Stamp Duty and Registration Charges</h4>
         <form id="tax_pay">
             <div class="row mb-3">
-                <div class="col-6">
-                    <input type="text" class="form-control" id="tax_pay_serveyNo" placeholder="tax_pay_serveyNo"
-                        value="101">
+                <div class="col-md-4 mb-2">
+                    <input type="text" class="form-control" id="tax_pay_ulpin" placeholder="ULPIN"
+                        value="12345678901234">
+                </div>
+                <div class="col-md-4 mb-2">
+                    <button id="tax_pay_submit" type="submit" class="btn btn-primary">Submit</button>
                 </div>
             </div>
 
-            <div class="col">
-                <button id="tax_pay_submit" type="submit" class="btn btn-primary">Submit</button>
-            </div>
         </form>
 
     </div>
@@ -193,7 +220,33 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                    <table class="table table-bordered border-dark">
+                        <thead>
+                            <tr>
+                                <th>Attribute</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table_more_info_tbody"></tbody>
+                    </table>
 
+                    <h5 class="mt-3 display">Requests <button type="button" class="btn btn-warning btn-sm" id="clear_requests_submit">Clear All</button></h5>
+
+                    <div style="overflow-y: auto;">
+                        <!-- <table class="table table-dark table-bordered table-hover"> -->
+                        <table class="table table-bordered table-hover border-dark">
+                            <thead>
+                                <tr class="align-middle">
+                                    <th scope="col">Buyer</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Price (₹)</th>
+                                    <th scope="col">Date-Time</th>
+                                    <th class="text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table_requests_tbody"></tbody>
+                        </table>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -202,6 +255,50 @@
         </div>
     </div>
 
+    <!-- Modal 2 -->
+    <div class="modal fade" id="formModal" tabindex="-1" aria-labelledby="formModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="formModalLabel"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="estate_sell">
+            
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label for="estate_sell_reason" class="form-label">Reason</label>
+                                <select class="form-select" name="estate_sell_reason" id="estate_sell_reason">
+                                    <option value="">--Please choose a reason for sell--</option>
+                                    <option value="sell" selected>Sell</option>
+                                    <option value="will">Will</option>
+                                    <option value="inheritance">Inheritance</option>
+                                    <option value="gift">Gift</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label for="estate_sell_password">Password</label>
+                                <input type="password" class="form-control" name="estate_sell_password" id="estate_sell_password"
+                                placeholder="estate_sell_password" value="123456">
+                            </div>
+                        </div>
+            
+                        <div class="col-12">
+                            <button id="estate_sell_submit" type="submit" class="btn btn-success">Submit</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button id="formModal_back" class="btn btn-primary" data-bs-target="#infoModal" data-bs-toggle="modal"><i class="fas fa-arrow-circle-left"></i> Back</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <%- include('../templates/footer') %>
 
@@ -221,36 +318,93 @@
 
             ////////////////////////
             const list_owned = JSON.parse($("#owned_estate_data").html());
-            const tb = $("#table_owned tbody");
-            const avail = $("#estate_avail_serveyNo");
-            const ver = $("#estate_verify_serveyNo");
-            const sell = $("#estate_sell_serveyNo");
+            const list_requested = JSON.parse($("#requested_user_data").html());
 
+            const tb = $("#table_owned tbody");
+            const tbr = $("#table_requested tbody");
+            const avail = $("#estate_avail_ulpin");
+            const ver = $("#estate_verify_ulpin");
+            const sell = $("#estate_sell_ulpin");
+            
+            if(list_owned.length>0) tb.html("");
             list_owned.forEach(element => {
-                tb.append(`<tr>
-                        <td>${element.serveyNo}</td>
+                tb.append(`<tr class="align-middle">
+                        <td>${element.ulpin}</td>
                         <td>${element.officeCode}</td>
                         <td>${element.area}</td>
                         <td>${element.saleAvailability == true ? "Available":"Not Available"}</td>
-                        <td>${element.beingSold}</td>
-                        <td><button data-info='${JSON.stringify(element)}' class="btn btn-info more_info" data-bs-toggle="modal" data-bs-target="#infoModal">View</button></td>
+                        <td>${element.beingSold ? "Yes" : "No"}</td>
+                        <td class="text-center"><button data-info='${JSON.stringify(element)}' class="btn btn-info more_info" data-bs-toggle="modal" data-bs-target="#infoModal">View</button></td>
                     </tr>`);
 
-                avail.append(`<option value="${element.serveyNo}">${element.serveyNo}</option>`);
-                ver.append(`<option value="${element.serveyNo}">${element.serveyNo}</option>`);
-                sell.append(`<option value="${element.serveyNo}">${element.serveyNo}</option>`);
+                avail.append(`<option value="${element.ulpin}">${element.ulpin}</option>`);
+                ver.append(`<option value="${element.ulpin}">${element.ulpin}</option>`);
+                sell.append(`<option value="${element.ulpin}" data-requests='${JSON.stringify(element.requests)}'>${element.ulpin}</option>`);
+            });
+
+            if(list_requested.length>0) tbr.html("");
+            list_requested.forEach(element => {
+                tbr.append(`<tr class="align-middle">
+                        <td>${element.servryNo}</td>
+                        <td>${element.proposedPrice}</td>
+                        <td>${new Date(element.dateTime).toLocaleString()}</td>
+                    </tr>`);
             });
 
             $(".more_info").click(function () {
                 const data = JSON.parse($(this).attr('data-info'));
-                $("#infoModalLabel").html(`Servey No.: ${data.serveyNo}`);
-                delete data["serveyNo"];
-                delete data["officeCode"];
-                delete data["area"];
-                delete data["saleAvailability"];
-                delete data["beingSold"];
-                delete data["owner"];
-                $("#infoModal .modal-body").html(`<pre>${JSON.stringify(data, null, 4)}</pre>`)
+                $("#infoModalLabel").html(`ULPIN: ${data.ulpin}`);
+                $("#infoModalLabel").attr("data-ulpin", data.ulpin);
+
+                const info_table = $("#table_more_info_tbody");
+                const requests_table = $("#table_requests_tbody");
+
+                const info_table_html = `
+                <tr>
+                    <td class="table-active">Location</td>
+                    <td>${data.location}</td>
+                </tr>
+                <tr>
+                    <td class="table-active">Purchase On</td>
+                    <td>${new Date(data.purchasedOn).toLocaleString()}</td>
+                </tr>
+                <tr>
+                    <td class="table-active">Transaction Count</td>
+                    <td>${data.transactionsCount}</td>
+                </tr>
+                <tr>
+                    <td class="table-active">Status</td>
+                    <td>${data.status == 0 ? "Not Verified" : (data.status == 1 ? "Verified" : "Suspended")}</td>
+                </tr>
+                `
+
+                let requests_table_html = ""
+
+                if (data.requests.length === 0)
+                    requests_table_html = `
+                    <tr>
+                        <td colspan="5" class="text-center">--- No Requests ---</td>
+                    </tr>
+                    `
+
+                data.requests.forEach(element => {
+
+                    requests_table_html += `
+                    <tr class="align-middle">
+                        <td>${element.buyer}</td>
+                        <td>${element.name}</td>
+                        <td>${element.proposedPrice}</td>
+                        <td>${new Date(element.dateTime).toLocaleString()}</td>
+                        <td class="text-center" data-buyer="${element.buyer}" data-buyerName="${element.name}">
+                            <button class="btn btn-success me-3 buyer_request_action" data-action="accept" data-bs-target="#formModal" data-bs-toggle="modal"><i class="fas fa-check-circle "></i></button>
+                            <button class="btn btn-danger buyer_request_action" data-action="reject"><i class="fas fa-times-circle"></i></button>
+                        </td>
+                    </tr>
+                    `
+                });
+
+                info_table.html(info_table_html);
+                requests_table.html(requests_table_html);
             });
 
             ////////////////////////
@@ -258,15 +412,17 @@
 
             $("#estate_avail_submit").click(function (e) {
                 e.preventDefault();
+                $("#full-screen-spinner-container").show();
 
                 const data = {
-                    serveyNo: $('#estate_avail_serveyNo').val(),
+                    ulpin: $('#estate_avail_ulpin').val(),
                     saleAvailability: $('input[name="estate_avail_choice"]:checked').val()
                 }
 
                 submitForm("/user/estate/availability", "POST", data)
                     .done(function (res) {
                         console.log(res);
+                        $("#full-screen-spinner-container").hide();
                     })
                     .fail(function (err) {
                         console.log(err);
@@ -276,27 +432,46 @@
 
             $("#estate_buy_submit").click(function (e) {
                 e.preventDefault();
+                $("#full-screen-spinner-container").show();
 
                 const data = {
-                    serveyNo: $('#estate_buy_serveyNo').val(),
+                    ulpin: $('#estate_buy_ulpin').val(),
                     proposedPrice: $('#estate_buy_proposedPrice').val()
                 }
 
                 submitForm("/user/estate/buy", "POST", data)
                     .done(function (res) {
                         console.log(res);
+                        $("#full-screen-spinner-container").hide();
                     })
                     .fail(function (err) {
                         console.log(err);
                     });
             });
 
+            /////////////////////////////////////////////////
 
-            $("#estate_sell_submit").click(function (e) {
+            /* $("#estate_sell_ulpin").on("change", function() {
+                if($(this).val() !== "") {
+                    const raw_requests = $(this).find(':selected').attr("data-requests");
+                    const requests = JSON.parse(raw_requests);
+
+                    const buyer_select = $("#estate_sell_buyer");
+
+                    buyer_select.empty().append(`<option value="">--Please choose a Buyer--</option>`);
+
+                    requests.forEach(req => {
+                        buyer_select.append(`<option value="${req.buyer}">${req.buyer} ( ${req.name} ), ${req.proposedPrice} ₹</option>`)
+                    });
+                }
+            }); */
+
+            /* $("#estate_sell_submit").click(function (e) {
                 e.preventDefault();
+                $("#full-screen-spinner-container").show();
 
                 const data = {
-                    serveyNo: $('#estate_sell_serveyNo').val(),
+                    ulpin: $('#estate_sell_ulpin').val(),
                     buyer: $('#estate_sell_buyer').val(),
                     reason: $("#estate_sell_reason").val(),
                     password: $('#estate_sell_password').val()
@@ -305,10 +480,91 @@
                 submitForm("/user/estate/sell", "POST", data)
                     .done(function (res) {
                         console.log(res);
+                        $("#full-screen-spinner-container").hide();
                     })
                     .fail(function (err) {
                         console.log(err);
                     });
+            }); */
+
+            $(document).on("click", ".buyer_request_action", function (e) { 
+                e.preventDefault();
+
+                const this_btn = $(this);
+
+                const action = this_btn.attr("data-action");
+
+                const data = {
+                    ulpin: $("#infoModalLabel").attr("data-ulpin"),
+                    buyer: this_btn.parent().attr("data-buyer")
+                }
+
+                const buyerName = this_btn.parent().attr("data-buyerName")
+
+                if(action === "accept") {
+                    $("#formModalLabel").html(`Sell estate with ULPIN ${data.ulpin} to ${buyerName} (${data.buyer})`);
+                    $("#formModalLabel").attr("data-ulpin", data.ulpin);
+                    $("#formModalLabel").attr("data-buyer", data.buyer);
+
+                } else {
+                    $("#full-screen-spinner-container").show();
+
+                    submitForm("/user/estate/sell?_method=DELETE", "DELETE", data)
+                    .done(function (res) {
+                        console.log(res);
+                        this_btn.closest("tr").remove();
+                        $("#full-screen-spinner-container").hide();
+                    })
+                    .fail(function (err) {
+                        console.log(err);
+                    });
+                }
+
+            });
+
+            $("#estate_sell_submit").click(function (e) {
+                e.preventDefault();
+                $("#full-screen-spinner-container").show();
+
+                const data = {
+                    ulpin: $("#formModalLabel").attr("data-ulpin"),
+                    buyer: $("#formModalLabel").attr("data-buyer"),
+                    reason: $("#estate_sell_reason").val(),
+                    password: $('#estate_sell_password').val()
+                }
+                console.log(data);
+
+                submitForm("/user/estate/sell", "POST", data)
+                .done(function (res) {
+                    // console.log(res);
+                    location.reload();
+
+                    // $("#estate_sell")[0].reset();
+                    // $("#full-screen-spinner-container").hide();
+                })
+                .fail(function (err) {
+                    console.log(err);
+                });
+            });
+
+
+            $("#clear_requests_submit").click(function() {
+                $("#full-screen-spinner-container").show();
+                const ulpin = $("#infoModalLabel").attr("data-ulpin");
+
+                submitForm("/user/estate/sell?_method=DELETE", "DELETE", {ulpin: ulpin})
+                .done(function (res) {
+                    console.log(res);
+                    $("#table_requests_tbody").html(`
+                    <tr>
+                        <td colspan="5" class="text-center">--- No Requests ---</td>
+                    </tr>
+                    `);
+                    $("#full-screen-spinner-container").hide();
+                })
+                .fail(function (err) {
+                    console.log(err);
+                });
             });
 
 
@@ -317,15 +573,17 @@
 
             $("#estate_verify_submit").click(function (e) {
                 e.preventDefault();
+                $("#full-screen-spinner-container").show();
 
                 const data = {
-                    serveyNo: $('#estate_verify_serveyNo').val(),
+                    ulpin: $('#estate_verify_ulpin').val(),
                     password: $('#estate_verify_password').val()
                 }
 
                 submitForm("/user/estate/verify", "POST", data)
                     .done(function (res) {
                         console.log(res);
+                        $("#full-screen-spinner-container").hide();
                     })
                     .fail(function (err) {
                         console.log(err);
@@ -334,9 +592,10 @@
 
             $("#tax_pay_submit").click(function (e) {
                 e.preventDefault();
+                $("#full-screen-spinner-container").show();
 
                 const data = {
-                    serveyNo: $('#tax_pay_serveyNo').val(),
+                    ulpin: $('#tax_pay_ulpin').val(),
                 }
 
                 submitForm("/tax", "POST", data)
@@ -344,6 +603,13 @@
                         window.location.replace(res.redirectURL);
                     });
             });
+
+            //=========================================
+
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+            })
 
         });
     </script>

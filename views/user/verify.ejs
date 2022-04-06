@@ -31,19 +31,33 @@
         </div>
     </nav>
 
+    <div id="full-screen-spinner-container" style="display: none;">
+        <div class="spinner-border" id="full-screen-spinner" role="status"></div>
+    </div>
+
     <div class="container mt-3">
 
         <h3>Verify User <small class="text-muted">(2FA)</small></h3>
         <form class="row" id="user_verify">
-            <div class="col">
-                <input class="form-control" type="password" name="user_verify_password" id="user_verify_password"
-                    placeholder="user_verify_password" value="123456">
+            <div class="col-12 mb-2">
+                <label for="user_verify_newPassword" class="form-label">Old Password</label>
+                <input type="password" class="form-control" id="user_verify_oldPassword" placeholder="user_verify_oldPassword" value="<%= loggedInUser.uid %>">
+            </div>
+            <div class="col-md-6 mb-2">
+                <label for="user_verify_newPassword" class="form-label">New Password</label>
+                <input class="form-control" type="password" id="user_verify_newPassword" placeholder="user_verify_newPassword" value="123456">
+            </div>
+            <div class="col-md-6 mb-2">
+                <label for="user_verify_newPassword" class="form-label">Confirm Password</label>
+                <input class="form-control" type="password" id="user_verify_confirmPassword" placeholder="user_verify_confirmPassword" value="123456">
             </div>
 
             <div class="col">
                 <button class="btn btn-info" id="user_verify_submit">Submit</button>
             </div>
         </form>
+
+        <div class="text-warning mt-3"><i class="fas fa-exclamation-circle"></i> 2FA to be added in future.</div>
         
         <a id="logout" href="/logout"></a>
     <%- include('../templates/footer') %>
@@ -65,9 +79,19 @@
 
             $("#user_verify_submit").click(function (e) {
                 e.preventDefault();
+                $("#full-screen-spinner-container").show();
+
+                const oldPass = $("#user_verify_oldPassword").val();
+                const newPass = $("#user_verify_newPassword").val();
+                const confirmPass = $("#user_verify_confirmPassword").val();
+
+                if(newPass !== confirmPass) {
+                    return alert("New Password Missmatched!");
+                }
 
                 const data = {
-                    password: $('#user_verify_password').val()
+                    oldPass: oldPass,
+                    newPass: newPass
                 }
 
                 submitForm("/user/verify", "POST", data)

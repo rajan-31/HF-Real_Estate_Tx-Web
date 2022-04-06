@@ -63,8 +63,24 @@
             <button id="execute_any_submit">Execute</button>
         </form>
 
-        <h2>Ledger Data</h2>
+        <h2 class="">Ledger Data</h2>
+        
+        <span>View -> </span>
+        <label class="ms-3" for="view_grid">Grid(3x3)</label>
+        <input type="radio" name="view" id="view_grid" checked="checked" onclick="$('#show_data, #show_data_admin, #show_data_user, #show_data_estate, #show_data_tran').children().each(function(){$(this).toggleClass('col-4', true).toggleClass('col', false)});">
+        <label class="ms-3" for="view_simple">Simple</label>
+        <input type="radio" name="view" id="view_simple" onclick="$('#show_data, #show_data_admin, #show_data_user, #show_data_estate, #show_data_tran').children().each(function(){$(this).toggleClass('col-4', false).toggleClass('col', true)});">
+        
+        
         <div id="show_data" class="row border"></div>
+        <h5 class="mt-4">Admins</h5>
+        <div id="show_data_admin" class="row border"></div>
+        <h5 class="mt-4">Users</h5>
+        <div id="show_data_user" class="row border"></div>
+        <h5 class="mt-4">Estates</h5>
+        <div id="show_data_estate" class="row border"></div>
+        <h5 class="mt-4">Transactions</h5>
+        <div id="show_data_tran" class="row border"></div>
 
     </div>
 
@@ -99,11 +115,27 @@
                             val = JSON.parse(val);
                             let key = temp_key.substring(5);
 
-                            let json = {Key: key, Value: val};
+                            // let json = {Key: key, Value: val};
+                            let json = val;
+                            // let json = Object.assign({key: key}, val)
                             let jsonStr = JSON.stringify(json, null, 4);
                             
                             agg.push(json);
-                            $('#show_data').append(`<div class="col-4 border p-3"><pre>${jsonStr}</pre></div>`)
+                            // $('#show_data').append(`<div class="col-4 border p-3"><pre>${jsonStr}</pre></div>`)
+                            // $('#show_data').append(`<div class="col-4 border border-secondary p-0"><p class="bg-info p-1">${key}</p><pre class="px-3">${jsonStr}</pre></div>`)
+
+                            let temp_id = "show_data"
+                            if(key.startsWith("admin")) {
+                                temp_id += "_admin"
+                            } else if(key.startsWith("user")) {
+                                temp_id += "_user"
+                            } else if(key.startsWith("estate")) {
+                                temp_id += "_estate"
+                            } else if(key.startsWith("tran")) {
+                                temp_id += "_tran"
+                            }
+
+                            $('#'+temp_id).append(`<div class="col-4 border border-secondary p-0 d-flex flex-column"><p class="bg-info p-1">${key}</p><pre class="px-3 flex-grow-1">${jsonStr}</pre></div>`)
                         });
                         console.log(agg);
                     })

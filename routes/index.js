@@ -45,9 +45,9 @@ router.post('/execute-any', (req, res) => {
 
 router.get('/details/estate', (req, res) => {
     const queryData = req.query;
-    const serveyNo = queryData.serveyNo;
+    const ulpin = queryData.ulpin;
 
-    const key = "estate" + '_' + serveyNo;
+    const key = "estate" + '_' + ulpin;
 
     contract.evaluateTransaction('GetValue', key).then(async (payload) => {
         const estate = JSON.parse( payload.toString() );
@@ -60,12 +60,10 @@ router.get('/details/estate', (req, res) => {
 router.get('/details/transaction', (req, res) => {
     const queryData = req.query;
 
-    const serveyNo = queryData.serveyNo;
+    const ulpin = queryData.ulpin;
     const transactionNum = queryData.transactionNum;
 
-    const key = "transaction" + '_' + serveyNo + '_' + transactionNum;
-
-    console.log(key)
+    const key = "transaction" + '_' + ulpin + '_' + transactionNum;
 
     contract.evaluateTransaction('GetValue', key).then(async (payload) => {
         const transaction = JSON.parse( payload.toString() );

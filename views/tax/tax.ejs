@@ -31,13 +31,17 @@
         </div>
     </nav>
 
+    <div id="full-screen-spinner-container" style="display: none;">
+        <div class="spinner-border" id="full-screen-spinner" role="status"></div>
+    </div>
+
     <div class="container mt-3">
         <h3>Pay Stamp Duty and Registration Charges</h2>
 
         <table class="table table-bordered border-dark">
             <tr>
-                <td class="table-active">Servey No.</td>
-                <td><span id="data_serveyNo"><%= serveyNo %></span></td>
+                <td class="table-active">ULPIN</td>
+                <td><span id="data_ulpin"><%= ulpin %></span></td>
             </tr>
             <tr>
                 <td class="table-active">Transaction Id</td>
@@ -74,9 +78,10 @@
 
             $("#tax_pay_submit").click(function (e) {
                 e.preventDefault();
+                $("#full-screen-spinner-container").show();
 
                 const data = {
-                    serveyNo: $("#data_serveyNo").text(),
+                    ulpin: $("#data_ulpin").text(),
                     transactionId: $("#data_transactionId").text()
                 }
 

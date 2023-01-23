@@ -4,6 +4,7 @@ const path = require("path");
 
 const allMiddlewares = require('../middlewares/index');
 
+const Estate = require('../models/Estate');
 
 router.get('/registrar', allMiddlewares.isLoggedInRegistrar, (req, res) => {
     const key = 'admin' + '_' + req.user.officeCode;
@@ -61,7 +62,26 @@ router.post('/registrar/estate', allMiddlewares.isLoggedInRegistrar, (req, res) 
     const transactionsCount = formData.transactionsCount;
 
     contract.submitTransaction('Create_Estate', officeCode, ulpin, owner, location, area, purchasedOn, transactionsCount).then((payload) => {
-        res.status(200).json(JSON.parse(payload.toString()));
+
+        Estate.create({
+            ulpin: ulpin,
+            owner: owner,
+            officeCode: officeCode,
+            location: location,
+            area: area,
+            status: 0,
+            purchasedOn: purchasedOn,
+            saleAvailability: false,
+            beingSold: false
+        }, (err, data) => {
+            if (err) {
+                console.log(err);
+            }
+
+            console.log(data);
+            res.status(200).json(JSON.parse(payload.toString()));
+        });
+
     }).catch((err) => {
         res.status(501).send(err);
     });
@@ -80,7 +100,18 @@ router.put('/registrar/estate', allMiddlewares.isLoggedInRegistrar, (req, res) =
     const transactionsCount = formData.transactionsCount == "" ? -1 : formData.transactionsCount;
 
     contract.submitTransaction('Modify_Estate', officeCode, ulpin, location, area, purchasedOn, transactionsCount).then((payload) => {
-        res.status(200).json(JSON.parse(payload.toString()));
+        Estate.updateOne({ ulpin: ulpin }, {
+            area: area,
+            location: location,
+            purchasedOn: purchasedOn
+        }, (err, data) => {
+            if (err) {
+                console.log(err);
+            }
+
+            console.log(data);
+            res.status(200).json(JSON.parse(payload.toString()));
+        });
     }).catch((err) => {
         res.status(501).send(err);
     });
@@ -95,19 +126,45 @@ router.post('/registrar/sell', allMiddlewares.isLoggedInRegistrar, (req, res) =>
     const ulpin = formData.ulpin;
     const action = formData.action;
 
+    const seller = formData.seller;
+    const buyer = formData.buyer;
+
     if(action === "accept") {
         const temp_dateTime = new Date();
         const dateTime = '20' + ("0" + temp_dateTime.getFullYear()).slice(-2) + '-' + ("0" + (temp_dateTime.getMonth() + 1)).slice(-2) + '-' + ("0" + temp_dateTime.getDate()).slice(-2) + 'T' +  ("0" + temp_dateTime.getHours()).slice(-2) + ':' + ("0" + temp_dateTime.getMinutes()).slice(-2) + ":" + ("0" + temp_dateTime.getSeconds()).slice(-2) + '+05:30';
 
         contract.submitTransaction('ApproveSell_Estate', username, ulpin, dateTime).then((payload) => {
-            res.status(200).json(JSON.parse(payload.toString()));
+
+            Estate.updateOne({ ulpin: ulpin }, {
+                owner: buyer,
+                purchasedOn: dateTime,
+                beingSold: false,
+                saleAvailability: false
+            }, (err, data) => {
+                if (err) {
+                    console.log(err);
+                }
+
+                console.log(data);
+                res.status(200).json(JSON.parse(payload.toString()));
+            });
         }).catch((err) => {
             res.status(501).send(JSON.parse(err.toString()));
         });
 
     } else {
         contract.submitTransaction('RejectSell_Estate', username, ulpin).then((payload) => {
-            res.status(200).json(JSON.parse(payload.toString()));
+
+            Estate.updateOne({ ulpin: ulpin }, {
+                beingSold: false,
+            }, (err, data) => {
+                if (err) {
+                    console.log(err);
+                }
+
+                console.log(data);
+                res.status(200).json(JSON.parse(payload.toString()));
+            });
         }).catch((err) => {
             res.status(501).send(err);
         });
@@ -128,7 +185,7 @@ router.post('/registrar/transaction', allMiddlewares.isLoggedInRegistrar, (req, 
     const temp_tDateTime = new Date(formData.tDateTime);
     const tDateTime = '20' + ("0" + temp_tDateTime.getFullYear()).slice(-2) + '-' + ("0" + (temp_tDateTime.getMonth() + 1)).slice(-2) + '-' + ("0" + temp_tDateTime.getDate()).slice(-2) + 'T' +  ("0" + temp_tDateTime.getHours()).slice(-2) + ':' + ("0" + temp_tDateTime.getMinutes()).slice(-2) + ":" + ("0" + temp_tDateTime.getSeconds()).slice(-2) + '+05:30';
 
-    const officeCode = formData.officeCode;
+    const officeCode = formData.officeCode; res.status(200).send({ message: 'OK' });
     const approvedBy = formData.approvedBy;
 
     const temp_aDateTime = new Date(formData.aDateTime);

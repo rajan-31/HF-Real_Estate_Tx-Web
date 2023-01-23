@@ -93,7 +93,7 @@
                 </div>
                 <div class="col-md-4 mb-2">
                     <input type="password" class="form-control" name="estate_verify_password"
-                        id="estate_verify_password" placeholder="Password" value="123456">
+                        id="estate_verify_password" placeholder="Password" value="">
                 </div>
                 <div class="col-md-4 mb-2">
                     <button id="estate_verify_submit" type="submit" class="btn btn-primary">Submit</button>
@@ -137,12 +137,12 @@
             <div class="row mb-3">
                 <div class="col-md-4 mb-2">
                     <input type="text" class="form-control" id="estate_buy_ulpin" name="estate_buy_ulpin" placeholder="ULPIN"
-                    value="12345678901234">
+                    value="">
                 </div>
                 <div class="col-md-4 mb-2">
                     <div class="input-group">
                         <input type="text" class="form-control" id="estate_buy_proposedPrice" name="estate_buy_proposedPrice"
-                    placeholder="Proposed Price" value="999">
+                    placeholder="Proposed Price" value="">
                         <span class="input-group-text">₹</span>
                     </div>
                 </div>
@@ -200,7 +200,7 @@
             <div class="row mb-3">
                 <div class="col-md-4 mb-2">
                     <input type="text" class="form-control" id="tax_pay_ulpin" placeholder="ULPIN"
-                        value="12345678901234">
+                        value="">
                 </div>
                 <div class="col-md-4 mb-2">
                     <button id="tax_pay_submit" type="submit" class="btn btn-primary">Submit</button>
@@ -283,7 +283,7 @@
                             <div class="col">
                                 <label for="estate_sell_password">Password</label>
                                 <input type="password" class="form-control" name="estate_sell_password" id="estate_sell_password"
-                                placeholder="estate_sell_password" value="123456">
+                                placeholder="Password" value="">
                             </div>
                         </div>
             
@@ -344,8 +344,9 @@
 
             if(list_requested.length>0) tbr.html("");
             list_requested.forEach(element => {
+                console.log(element)
                 tbr.append(`<tr class="align-middle">
-                        <td>${element.servryNo}</td>
+                        <td>${element.serveyNo}</td>
                         <td>${element.proposedPrice}</td>
                         <td>${new Date(element.dateTime).toLocaleString()}</td>
                     </tr>`);
@@ -395,9 +396,13 @@
                         <td>${element.name}</td>
                         <td>${element.proposedPrice}</td>
                         <td>${new Date(element.dateTime).toLocaleString()}</td>
-                        <td class="text-center" data-buyer="${element.buyer}" data-buyerName="${element.name}">
-                            <button class="btn btn-success me-3 buyer_request_action" data-action="accept" data-bs-target="#formModal" data-bs-toggle="modal"><i class="fas fa-check-circle "></i></button>
-                            <button class="btn btn-danger buyer_request_action" data-action="reject"><i class="fas fa-times-circle"></i></button>
+                        <td class="text-center" data-buyer="${element.buyer}" data-buyername="${element.name}">
+                            <div class="d-flex justify-content-between flex-column flex-lg-row">
+                                <button class="btn btn-success mb-2 mb-lg-0 buyer_request_action" data-action="accept" data-bs-target="#formModal" data-bs-toggle="modal">
+                                    <i class="fas fa-check-circle "></i>
+                                </button>
+                                <button class="btn btn-danger buyer_request_action" data-action="reject"><i class="fas fa-times-circle"></i></button>
+                            </div>
                         </td>
                     </tr>
                     `
@@ -496,13 +501,15 @@
 
                 const data = {
                     ulpin: $("#infoModalLabel").attr("data-ulpin"),
-                    buyer: this_btn.parent().attr("data-buyer")
+                    buyer: this_btn.parent().parent().attr("data-buyer")
                 }
 
-                const buyerName = this_btn.parent().attr("data-buyerName")
+                console.log(data)
+
+                const buyerName = this_btn.parent().parent().attr("data-buyername")
 
                 if(action === "accept") {
-                    $("#formModalLabel").html(`Sell estate with ULPIN ${data.ulpin} to ${buyerName} (${data.buyer})`);
+                    $("#formModalLabel").html(`Sell Estate with ULPIN <span class="text-info">${data.ulpin}</span> to <span class="text-info">${buyerName}</span> (${data.buyer})`);
                     $("#formModalLabel").attr("data-ulpin", data.ulpin);
                     $("#formModalLabel").attr("data-buyer", data.buyer);
 

@@ -19,7 +19,7 @@
                     <% if (who == "user") { %>
                         <a class="nav-link" href="/user">User</a>
                     <% } else if(who == "registrar") { %>
-                        <a class="nav-link" href="/registrar">Reistrar</a>
+                        <a class="nav-link" href="/registrar">Registrar</a>
                     <% } else if (who == "igr") { %>
                         <a class="nav-link" href="/igr">IGR</a>
                     <% } else if(who == "") { %>
@@ -52,13 +52,24 @@
             <h1 class="text-info">Perform Real Estate Transactions Securely!</h1>
         </div>
         
-        <h4 class="mt-5">View Estate Details and History</h4>
-        <form class="row mb-3" id="view_details">
+        <h4 class="mt-5 text-center">Estate Details and History</h4>
+        <!-- <form class="row mb-3" id="view_details">
             <div class="col">
-                <input class="form-control" type="text" id="view_details_ulpin" placeholder="ULPIN" value="12345678901234">
+                <input class="form-control" type="text" id="view_details_ulpin" placeholder="ULPIN" value="">
             </div>
             <div class="col">
                 <button class="btn btn-success" id="view_details_submit">View</button>
+            </div>
+        </form> -->
+        
+        <form class="mb-3" id="view_details">
+            <div class="d-flex flex-column flex-sm-row justify-content-center">
+                <div class="my-1 my-sm-0 mx-sm-1">
+                    <input class="form-control" type="text" id="view_details_ulpin" placeholder="ULPIN" value="<%= q_ulpin %>">
+                </div>
+                <div class="my-1 my-sm-0 mx-sm-1 align-self-center">
+                    <button class="btn btn-success" id="view_details_submit">View</button>
+                </div>
             </div>
         </form>
 
@@ -96,13 +107,24 @@
             </tbody>
         </table>
 
-        <h4>View User Details</h4>
-        <form class="row mb-3" id="view_user">
+        <h4 class="text-center">User Details</h4>
+        <!-- <form class="row mb-3" id="view_user">
             <div class="col">
-                <input class="form-control" type="text" id="view_user_uid" placeholder="UID" value="123456789021">
+                <input class="form-control" type="text" id="view_user_uid" placeholder="UID" value="">
             </div>
             <div class="col">
                 <button class="btn btn-success" id="view_user_submit">View</button>
+            </div>
+        </form> -->
+        
+        <form class="mb-3" id="view_details">
+            <div class="d-flex flex-column flex-sm-row justify-content-center">
+                <div class="my-1 my-sm-0 mx-sm-1">
+                    <input class="form-control" type="text" id="view_user_uid" placeholder="UID" value="<%= q_uid %>">
+                </div>
+                <div class="my-1 my-sm-0 mx-sm-1 align-self-center">
+                    <button class="btn btn-success" id="view_user_submit">View</button>
+                </div>
             </div>
         </form>
 
@@ -120,10 +142,58 @@
                 </tr>
             </tbody>
         </table>
+<!-- filter -->
+
+<h4 class="text-center">Filter Estates</h4>
+
+<form id="filter_estates" class="mb-3">
+    <div class="d-flex flex-column flex-sm-row justify-content-center">
+        <div class="my-1 my-sm-0 mx-sm-1">
+            <select class="form-select" name="filter_estates_district" id="filter_estates_district">
+                <option value="">-- District --</option>
+                <option value="Thane">Thane</option>
+                <option value="Raigad">Raigad</option>
+            </select>
+        </div>
+
+        <div class="my-1 my-sm-0 mx-sm-1">
+
+            <select class="form-select" name="filter_estates_taluka" id="filter_estates_taluka">
+                <option value="">-- Taluka --</option>
+            </select>
+        </div>
+
+        <div class="my-1 my-sm-0 mx-sm-1 align-self-center">
+            <button class="btn btn-success" id="filter_estates_submit">Filter</button>
+        </div>
+    </div>
+</form>
+
+<div>
+    <!-- <table id="table_owned" class="table table-dark table-bordered table-hover"> -->
+    <table id="table_filter" class="table table-bordered table-hover">
+        <thead hidden="hidden">
+            <tr class="align-middle">
+                <th scope="col">ULPIN</th>
+                <th scope="col">Owner</th>
+                <th scope="col">Area (m<sup>2</sup>)</th>
+                <th scope="col">Location</th>
+                <th scope="col">Sale Availability</th>
+                <th scope="col">Being Sold</th>
+                <th scope="col" class="text-center">More</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+<div id="query_data" data-ulpin="<%= q_ulpin %>" data-uid="<%= q_uid %>" hidden="hidden"></div>
+
     </div>
 
     <%- include('templates/footer') %>
-
+    
     <script>
         'use strict';
 
@@ -165,6 +235,11 @@
 
             $("#view_details_submit").click(function(e) {
                 e.preventDefault();
+
+                const ulpin = $("#view_details_ulpin").val();
+
+                if (ulpin.length == 0) return;
+
                 $("#full-screen-spinner-container").show()
 
                 const tb = $("#view_details_result tbody");
@@ -174,8 +249,6 @@
                 tb1.html("");
 
                 $("#view_transactions").attr("hidden", "hidden");
-
-                const ulpin = $("#view_details_ulpin").val();
 
                 const data0 = {
                     ulpin: ulpin
@@ -261,6 +334,11 @@
 
             $("#view_user_submit").click(function(e) {
                 e.preventDefault();
+
+                const uid = $("#view_user_uid").val()
+
+                if (uid.length == 0) return;
+
                 $("#full-screen-spinner-container").show();
 
                 const tb = $("#view_user_result tbody");
@@ -269,7 +347,7 @@
                 $("#view_user_result thead").attr('hidden', 'hidden');
 
                 const data = {
-                    uid: $("#view_user_uid").val()
+                    uid: uid
                 }
 
                 submitForm('/details/user', "GET", data)
@@ -289,8 +367,8 @@
                     $("#view_user_result thead").removeAttr('hidden');
 
                     tb.append(format_row("Name", res.name));
-                    tb.append(format_row("Status", res.status));
-                    tb.append(format_row("Owned", res.owned));
+                    tb.append(format_row("Status", res.status == 0 ? "Not Verified" : (res.status == 1 ? "Verified" : "Suspended")));
+                    tb.append(format_row("Owned", res.owned.join(", ")));
 
                     $("#full-screen-spinner-container").hide()
                 })
@@ -298,7 +376,95 @@
                     console.log(err);
                 });
             });
+
+            /* Filter Real Estates */
+            $("#filter_estates_submit").click(function (e) {
+                e.preventDefault();
+                $("#full-screen-spinner-container").show();
+
+                const district = $("#filter_estates_district").val();
+                const taluka = $("#filter_estates_taluka").val();
+
+                if (district.length == 0 || taluka.length == 0) {
+                    alert("Please select both Taluka and District!");
+                    $("#full-screen-spinner-container").hide();
+                    return;
+                }
+
+                const data = {
+                    district: district,
+                    taluka: taluka,
+                }
+
+                submitForm("/filter/estate", "POST", data)
+                    .done(function (res) {
+                        console.log(res);
+                        $("#table_filter thead").removeAttr('hidden');
+
+                        let table_rows = res.length > 0 ? '' : `<tr><td colspan="7" class="text-center">--- No Estates Found ---</td></tr>`;
+
+                        res.forEach(element => {
+                            table_rows += `
+                            <tr>
+                                <td>${element.ulpin}</td>
+                                <td>${element.owner}</td>
+                                <td>${element.area}</td>
+                                <td>${element.location}</td>
+                                <td>${element.saleAvailability ? "Available" : "Not Available"}</td>
+                                <td>${element.beingSold ? "Yes" : "No"}</td>
+                                <td class="text-center"><a href="/?ulpin=${element.ulpin}&uid=${element.owner}" target="_blank" rel="noopener noreferrer"><i class="fas fa-external-link-alt"></i></a></td>
+                            </tr>
+                            `
+                        });
+
+                        $("#table_filter tbody").html(table_rows);
+
+                        $("#full-screen-spinner-container").hide();
+                    })
+                    .fail(function (err) {
+                        console.log(err);
+                    });
+
+                $("#full-screen-spinner-container").hide()
+            });
+
+            // -----------------------------
+
+            const q_ulpin = $("#query_data").attr("data-ulpin");
+            const q_uid = $("#query_data").attr("data-uid");
+
+
+            $(window).on('load', function () {
+
+                if (q_uid.length > 0 && q_ulpin.length > 0) {
+                    // setTimeout(function () {
+                    // }, 5000);
+                    $("#view_details_submit").click();
+                    $("#view_user_submit").click();
+                }
+            })
+
+            // ----------------------------------
+
+            $("#filter_estates_district").on('change', function () {
+                const taluka_list = {
+                    "District": [],
+                    "Thane": ["Thane", "Bhiwandi", "Kalyan"],
+                    "Raigad": ["Karjat", "Khopoli", "Panvel"]
+                }
+
+                let taluka_html = `<option value="">-- Taluka --</option>`
+                const current_list = taluka_list[$("#filter_estates_district").val()] || [];
+
+                current_list.forEach(element => {
+                    taluka_html += `<option value="${element}">${element}</option>`
+                });
+
+                $("#filter_estates_taluka").html(taluka_html);
+            });
         });
+
+
     </script>
 
 </body>

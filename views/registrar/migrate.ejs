@@ -44,27 +44,65 @@
         <h3 class="mt-3">Create Estate</h3>
         <form class="row" id="create_estate">
             <div class="mb-2 col-md-6">
-                <input type="text" class="form-control" id="create_estate_ulpin" name="create_estate_ulpin" placeholder="create_estate_ulpin" value="12345678901234">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="create_estate_ulpin" name="create_estate_ulpin" placeholder="ULPIN"
+                        value="">
+                    <button class="input-group-text btn btn-success" id="create_estate_random_ulpin">
+                        <i class="fas fa-random"></i>
+                    </button>
+                </div>
             </div>
             <div class="mb-2 col-md-6">
-                <input type="text" class="form-control" id="create_estate_owner" name="create_estate_owner" placeholder="create_estate_owner" value="123456789021">
+                <input type="text" class="form-control" id="create_estate_owner" name="create_estate_owner" placeholder="Owner UID"
+                    value="">
             </div>
 
             <div class="mb-2 col-12">
-                <label class="form-label" for="create_estate_location">Location</label>
-                <textarea class="form-control" id="create_estate_location" name="create_estate_location" cols="50" rows="2">Village: X, Taluka: Y, District: Z, Pin: 123456</textarea>
+                <!-- <label class="form-label" for="create_estate_location">Location</label> -->
+                <!-- <textarea class="form-control" id="create_estate_location" name="create_estate_location" cols="50" rows="2"></textarea> -->
+                
+                <label class="form-label">Location</label>
+                
+                <div class="row">
+                    <div class="col-12 mb-1">
+                        <input class="form-control" id="create_estate_location_locality" placeholder="Village/Locality" type="text">
+                    </div>
+                
+                    <div class="col-12 col-sm-4 mb-1">
+                        <!-- <input class="form-control" id="create_estate_location_district" placeholder="District" type="text"> -->
+                        <select class="form-select" id="create_estate_location_district">
+                            <option value="">-- District --</option>
+                            <option value="Thane">Thane</option>
+                            <option value="Raigad">Raigad</option>
+                        </select>
+                    </div>
+                    <div class="col-12 col-sm-4 mb-1">
+                        <!-- <input class="form-control" id="create_estate_location_taluka" placeholder="Taluka" type="text"> -->
+                        <select class="form-select" id="create_estate_location_taluka">
+                            <option value="">-- Taluka --</option>
+                        </select>
+                    </div>
+                
+                    <div class="col-12 col-sm-4 mb-1">
+                        <input class="form-control" id="create_estate_location_pin" placeholder="PIN" type="number" min="100000"
+                            max="999999">
+                    </div>
+                </div>
             </div>
 
             <div class="input-group mb-2 col">
-                <input class="form-control" type="number" id="create_estate_area" name="create_estate_area" placeholder="create_estate_area" min="1" step="1" value="201">                
+                <input class="form-control" type="number" id="create_estate_area" name="create_estate_area" placeholder="Area" min="1"
+                    step="1" value="">
                 <span class="input-group-text">m<sup>2</sup></span>
             </div>
 
             <div class="mb-2 col">
-                <input class="form-control" type="datetime-local" id="create_estate_purchasedOn" name="create_estate_purchasedOn" placeholder="create_estate_purchasedOn" value="2022-12-15T13:15">
+                <input class="form-control" type="datetime-local" id="create_estate_purchasedOn" name="create_estate_purchasedOn"
+                    placeholder="Purchased On" value="">
             </div>
             <div class="mb-2 col">
-                <input class="form-control" type="number" id="create_estate_transactionsCount" name="create_estate_transactionsCount" placeholder="create_estate_transactionsCount" min="0" step="1" value="0">
+                <input class="form-control" type="number" id="create_estate_transactionsCount" name="create_estate_transactionsCount"
+                    placeholder="Old Transactions Count" min="0" step="1" value="">
             </div>
 
             <div class="col-12">
@@ -75,17 +113,18 @@
         <h3 class="mt-3">Add Old Transaction</h3>
         <form class="row" id="add_transaction">
             <div class="mb-2 col-md-6">
-                <input type="text" class="form-control" id="add_transaction_ulpin" placeholder="add_transaction_ulpin" value="12345678901235">
+                <input type="text" class="form-control" id="add_transaction_ulpin" placeholder="ULPIN" value="">
             </div>
             <div class="mb-2 col-md-6">
-                <input type="number" class="form-control" id="add_transaction_Num" placeholder="add_transaction_Num" value="1" min="0" step="1">
+                <input type="number" class="form-control" id="add_transaction_Num" placeholder="Transaction No." value="" min="0"
+                    step="1">
             </div>
 
             <div class="mb-2 col-md-6">
-                <input type="text" class="form-control" id="add_transaction_seller" placeholder="add_transaction_seller" value="123456789021">
+                <input type="text" class="form-control" id="add_transaction_seller" placeholder="Seller UID" value="">
             </div>
             <div class="mb-2 col-md-6">
-                <input type="text" class="form-control" id="add_transaction_buyer" placeholder="add_transaction_buyer" value="123456789022">
+                <input type="text" class="form-control" id="add_transaction_buyer" placeholder="Buyer UID" value="">
             </div>
 
             <div class="mb-2 col-md-6">
@@ -99,26 +138,27 @@
             </div>
             <div class="mb-2 col-md-6">
                 <div class="input-group">
-                    <input type="text" class="form-control" id="add_transaction_proposedPrice" placeholder="add_transaction_proposedPrice" value="999">
+                    <input type="text" class="form-control" id="add_transaction_proposedPrice" placeholder="Proposed Price" value="">
                     <span class="input-group-text">₹</span>
                 </div>
             </div>
 
             <div class="col-12 mb-2">
                 <div class=" col-md-6 mx-auto">
-                    <input class="form-control" type="datetime-local" id="add_transaction_transactionDateTime" placeholder="add_transaction_transactionDateTime">
+                    <input class="form-control" type="datetime-local" id="add_transaction_transactionDateTime"
+                        placeholder="Transaction Time">
                 </div>
             </div>
 
             <div class="mb-2 col-md-6">
-                <input type="text" class="form-control" id="add_transaction_officeCode" placeholder="add_transaction_officeCode" value="THN1">
+                <input type="text" class="form-control" id="add_transaction_officeCode" placeholder="Office Code" value="">
             </div>
             <div class="mb-2 col-md-6">
-                <input type="text" class="form-control" id="add_transaction_approvedBy" placeholder="add_transaction_approvedBy" value="123456789013">
+                <input type="text" class="form-control" id="add_transaction_approvedBy" placeholder="Approved By" value="">
             </div>
 
             <div class="mb-2 col-md-6 mx-auto">
-                <input class="form-control" type="datetime-local" id="add_transaction_approvedDateTime" placeholder="add_transaction_approvedDateTime">
+                <input class="form-control" type="datetime-local" id="add_transaction_approvedDateTime" placeholder="Approved Time">
             </div>
             
 
@@ -144,21 +184,44 @@
                 })
             }
 
+            async function submitFormAsync(url, method, data) {
+                try {
+                    const result = await $.ajax({
+                        type: method,
+                        url: url,
+                        data: data,
+                        dataType: 'json',
+                    })
+
+                    return result;
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+
             /////////////////////////////////
 
             
             $("#create_estate_submit").click(function (e) { 
                 e.preventDefault();
                 $("#full-screen-spinner-container").show();
+
+                const locality = $("#create_estate_location_locality").val()
+                const taluka = $("#create_estate_location_taluka").val()
+                const district = $("#create_estate_location_district").val()
+                const pin = $("#create_estate_location_pin").val()
+                const _location = `Locality: ${locality}, Taluka: ${taluka}, District: ${district}, PIN: ${pin}`;
                 
                 const data = {
                     ulpin : $("#create_estate_ulpin").val(),
                     owner : $("#create_estate_owner").val(),
-                    location : $("#create_estate_location").val(),
+                    location: _location,
                     area : $("#create_estate_area").val(),
                     purchasedOn : $("#create_estate_purchasedOn").val()+":00+05:30",
                     transactionsCount : $("#create_estate_transactionsCount").val()
                 }
+
+                console.log(data)
 
                 submitForm("/registrar/estate", "POST", data)
                 .done(function(res) {
@@ -195,6 +258,54 @@
                 .fail(function(err) {
                     console.log(err);
                 });
+            });
+
+            // random ULPIN
+            function getRndInteger(min, max) {
+                return Math.floor(Math.random() * (max - min)) + min;
+            }
+
+            $("#create_estate_random_ulpin").click(async function (e) {
+                e.preventDefault();
+                $("#full-screen-spinner-container").show();
+
+                let random_ulpin = "";
+                let retry_count = 5;
+
+                while (retry_count > 0) {
+                    retry_count--;
+                    random_ulpin = getRndInteger(10000000000001, 99999999999999);
+                    // random_ulpin = 12345678901234;
+
+                    const res = await submitFormAsync("/details/estate", "GET", { ulpin: random_ulpin });
+                    if (res) {
+                        console.log("Random ULPIN: ", random_ulpin)
+                        random_ulpin = "";
+                    } else {
+                        break;
+                    }
+                }
+
+                $("#create_estate_ulpin").val(random_ulpin);
+                $("#full-screen-spinner-container").hide();
+            })
+
+            // ----------------------
+
+            $("#create_estate_location_district").on('change', function () {
+                const taluka_list = {
+                    "Thane": ["Thane", "Bhiwandi", "Kalyan"],
+                    "Raigad": ["Karjat", "Khopoli", "Panvel"]
+                }
+                let taluka_html = `<option value="">-- Taluka --</option>`
+
+                const current_list = taluka_list[$("#create_estate_location_district").val()] || [];
+
+                current_list.forEach(element => {
+                    taluka_html += `<option value="${element}">${element}</option>`
+                });
+
+                $("#create_estate_location_taluka").html(taluka_html);
             });
 
         });

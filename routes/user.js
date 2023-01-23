@@ -4,6 +4,7 @@ const router = express.Router();
 const path = require("path");
 
 const allMiddlewares = require('../middlewares/index');
+const Estate = require('../models/Estate');
 
 
 router.get('/user', allMiddlewares.isLoggedInUser,  (req, res) => {
@@ -36,7 +37,12 @@ router.post('/user/estate/availability', allMiddlewares.isLoggedInUser, (req, re
     const saleAvailability = formData.saleAvailability;
 
     contract.submitTransaction('ChangeAvail_Estate', ulpin, saleAvailability).then((payload) => {
-        res.status(200).send({message: 'OK'});
+
+        Estate.updateOne({ ulpin: ulpin }, { saleAvailability: saleAvailability }, (err) => {
+            if (err) console.log(err);
+
+            res.status(200).send({ message: 'OK' });
+        }).lean();
     }).catch((err) => {
         res.status(501).send(err);
     });
@@ -77,7 +83,12 @@ router.post('/user/estate/sell', allMiddlewares.isLoggedInUser, (req, res)=>{
     const dateTime = '20' + ("0" + temp_dateTime.getFullYear()).slice(-2) + '-' + ("0" + (temp_dateTime.getMonth() + 1)).slice(-2) + '-' + ("0" + temp_dateTime.getDate()).slice(-2) + 'T' +  ("0" + temp_dateTime.getHours()).slice(-2) + ':' + ("0" + temp_dateTime.getMinutes()).slice(-2) + ":" + ("0" + temp_dateTime.getSeconds()).slice(-2) + '+05:30';
 
     contract.submitTransaction('AcceptRequest_Estate', username, password, ulpin, buyer, dateTime, reason).then((payload) => {
-        res.status(200).send({message: 'OK'});
+
+        Estate.updateOne({ ulpin: ulpin }, { beingSold: true }, (err) => {
+            if (err) console.log(err);
+
+            res.status(200).send({ message: 'OK' });
+        }).lean();
     }).catch((err) => {
         res.status(501).send(err);
     });
@@ -157,6 +168,8 @@ router.post('/user/estate/verify', allMiddlewares.isLoggedInUser, (req, res)=>{
 
     contract.submitTransaction('Verify_Estate', username, password, ulpin, status).then((payload) => {
         res.status(200).send({message: 'OK'});
+
+
     }).catch((err) => {
         res.status(501).send(err);
     });

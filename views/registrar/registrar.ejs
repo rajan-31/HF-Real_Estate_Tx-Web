@@ -86,10 +86,11 @@
         <h3 class="mt-3">Modify User</h3>
         <form class="row align-items-end" id="modify_user">
             <div class="col-md-3 col-sm-12 mb-2">
-                <input type="text" class="form-control" id="modify_user_uid" name="modify_user_uid" placeholder="UID" value="123456789023">
+                <input type="text" class="form-control" id="modify_user_uid" name="modify_user_uid" placeholder="UID" value="">
             </div>
             <div class="col-md-3 col-sm-12 mb-2">
-                <input type="text" class="form-control" id="modify_user_name" name="modify_user_name" placeholder="Name (First Middle Last)" value="UserX">
+                <input type="text" class="form-control" id="modify_user_name" name="modify_user_name"
+                    placeholder="Name (First Middle Last)" value="">
             </div>
             <div class="col-md-3 col-sm-12 mb-2">
                 <label for="modify_user_name" class="form-label">Status</label>
@@ -139,18 +140,47 @@
 
         <h3 class="mt-3">Modify Estate</h3>
         <form class="row" id="modify_estate">
-            <div class="mb-2 col-md-6">
-                <input type="text" class="form-control" id="modify_estate_ulpin" name="modify_estate_ulpin" placeholder="ULPIN" value="12345678901234">
+            <div class="mb-2 col-12">
+                <input type="text" class="form-control" id="modify_estate_ulpin" name="modify_estate_ulpin" placeholder="ULPIN"
+                    value="">
             </div>
 
-            <div class="input-group mb-2 col-md-6">
+            <div class="input-group mb-2 col-12">
                 <input class="form-control" type="number" id="modify_estate_area" name="modify_estate_area" placeholder="Area" min="1" step="1">                
                 <span class="input-group-text">m<sup>2</sup></span>
             </div>
 
             <div class="mb-2 col-12">
-                <label class="form-label" for="modify_estate_location">Location</label>
-                <textarea class="form-control" id="modify_estate_location" name="modify_estate_location" cols="50" rows="2"></textarea>
+                <!-- <label class="form-label" for="modify_estate_location">Location</label>
+                                                                                                                                                                                                                                <textarea class="form-control" id="modify_estate_location" name="modify_estate_location" cols="50" rows="2"></textarea> -->
+                
+                <label class="form-label">Location</label>
+                
+                <div class="row">
+                    <div class="col-12 col-sm-12 mb-1">
+                        <input class="form-control" id="modify_estate_location_locality" placeholder="Village/Locality" type="text">
+                    </div>
+                
+                    <div class="col-12 col-sm-4 mb-1">
+                        <!-- <input class="form-control" id="modify_estate_location_district" placeholder="District" type="text"> -->
+                        <select class="form-select" id="modify_estate_location_district">
+                            <option value="">-- District --</option>
+                            <option value="Thane">Thane</option>
+                            <option value="Raigad">Raigad</option>
+                        </select>
+                    </div>
+                    <div class="col-12 col-sm-4 mb-1">
+                        <!-- <input class="form-control" id="modify_estate_location_taluka" placeholder="Taluka" type="text"> -->
+                        <select class="form-select" id="modify_estate_location_taluka">
+                            <option value="">-- Taluka --</option>
+                        </select>
+                    </div>
+                
+                    <div class="col-12 col-sm-4 mb-1">
+                        <input class="form-control" id="modify_estate_location_pin" placeholder="PIN" type="number" min="100000"
+                            max="999999">
+                    </div>
+                </div>
             </div>
 
             <div class="mb-2 col-md-6">
@@ -310,19 +340,24 @@
                             submitForm('/details/user', "GET", {uid: res2.buyer})
                             .done(function(res4) {
                                 let row = `<tr>
-                                    <td class="align-middle">${ulpin}</td>
+                                    <td class="align-middle text-primary">${ulpin}</td>
                                     <td class="align-middle">${res2.seller} (${res3.name})</td>
                                     <td class="align-middle">${res2.buyer} (${res4.name})</td>
                                     `
                                 if(res1.isPaid) {
                                     row += `
-                                        <td class="align-middle">Yes</td>
-                                        <td class="text-center" data-ulpin=${ulpin}><button class="btn btn-success m-1 approve_sell_action" data-action="accept"><i class="fas fa-check-circle "></i></button><button class="btn btn-danger m-1 approve_sell_action" data-action="reject"><i class="fas fa-times-circle"></i></button></td>
+                                        <td class="align-middle text-success">Yes</td>
+                                        <td class="d-flex justify-content-between" data-ulpin=${ulpin} data-seller=${res2.seller} data-buyer=${res2.buyer}>
+                                            <button class="btn btn-success approve_sell_action" data-action="accept"><i class="fas fa-check-circle "></i></button>
+                                            <button class="btn btn-danger ms-1 approve_sell_action" data-action="reject"><i class="fas fa-times-circle"></i></button>
+                                        </td>
                                     </tr>`
                                 } else {
                                     row += `
-                                        <td class="align-middle">No</td>
-                                        <td class="text-center" data-ulpin=${ulpin}><button class="btn btn-danger approve_sell_action" data-action="reject"><i class="fas fa-times-circle"></i></button></td>
+                                        <td class="align-middle text-danger">No</td>
+                                        <td class="d-flex justify-content-end" data-ulpin=${ulpin} data-seller=${res2.seller} data-buyer=${res2.buyer}>
+                                            <button class="btn btn-danger approve_sell_action" data-action="reject"><i class="fas fa-times-circle"></i></button>
+                                        </td>
                                     </tr>`
                                 }
 
@@ -419,14 +454,22 @@
             $("#modify_estate_submit").click(function (e) { 
                 e.preventDefault();
                 $("#full-screen-spinner-container").show();
+
+                const locality = $("#modify_estate_location_locality").val()
+                const taluka = $("#modify_estate_location_taluka").val()
+                const district = $("#modify_estate_location_district").val()
+                const pin = $("#modify_estate_location_pin").val()
+                const _location = `Locality: ${locality}, Taluka: ${taluka}, District: ${district}, PIN: ${pin}`;
                 
                 const data = {
                     ulpin : $("#modify_estate_ulpin").val(),
-                    location : $("#modify_estate_location").val(),
+                    location: _location,
                     area : $("#modify_estate_area").val(),
                     purchasedOn : $("#modify_estate_purchasedOn").val() == '' ? '' : $("#modify_estate_purchasedOn").val()+":00+05:30",
                     transactionsCount : $("#modify_estate_transactionsCount").val()
                 }
+
+                console.log(data)
 
                 submitForm("/registrar/estate?_method=PUT", "PUT", data)
                 .done(function(res) {
@@ -469,7 +512,9 @@
                 
                 const data = {
                     ulpin : data_td.attr("data-ulpin"),
-                    action: pressed_btn.attr("data-action")
+                    action: pressed_btn.attr("data-action"),
+                    seller: data_td.attr("data-seller"),
+                    buyer: data_td.attr("data-buyer")
                 }
                
                 submitForm("/registrar/sell", "POST", data)
@@ -538,6 +583,25 @@
                     console.log(err);
                 });
             }); */
+
+            // -------------------------------------
+
+
+            $("#modify_estate_location_district").on('change', function () {
+                const taluka_list = {
+                    "Thane": ["Thane", "Bhiwandi", "Kalyan"],
+                    "Raigad": ["Karjat", "Khopoli", "Panvel"]
+                }
+                let taluka_html = `<option value="">-- Taluka --</option>`
+
+                const current_list = taluka_list[$("#modify_estate_location_district").val()] || [];
+
+                current_list.forEach(element => {
+                    taluka_html += `<option value="${element}">${element}</option>`
+                });
+
+                $("#modify_estate_location_taluka").html(taluka_html);
+            });
 
         });
     </script>

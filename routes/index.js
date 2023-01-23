@@ -1,9 +1,19 @@
 const express = require("express");
 const router = express.Router();
 
+const Estate = require('../models/Estate');
 
 router.get('/', (req, res) => {
-    res.render("home");
+    const queryData = req.query;
+
+    const ulpin = queryData.ulpin;
+    const uid = queryData.uid;
+
+    if (ulpin && uid) {
+        res.render("home", { q_ulpin: ulpin, q_uid: uid });
+    } else {
+        res.render("home", { q_ulpin: "", q_uid: "" });
+    }
 });
 
 router.get('/test', (req, res) => {
@@ -84,6 +94,24 @@ router.get('/details/user', (req, res) => {
         res.status(200).json(_user);
     }).catch((err) => {
         res.status(501).send(err);
+    });
+});
+
+/* FILTER ESTATES */
+router.post('/filter/estate', (req, res) => {
+    const formData = req.body;
+
+    const district = formData.district;
+    const taluka = formData.taluka;
+
+    const query = `.*Taluka: ${taluka}, District: ${district}.*`
+
+    Estate.find({ location: { $regex: query } }, (err, data) => {
+        if (err) {
+            res.status(503).send(err);
+        } else {
+            res.json(data);
+        }
     });
 });
 
